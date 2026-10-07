@@ -1,0 +1,22 @@
+# Dependencies and build output
+node_modules/
+dist/
+
+# Test output
+test-results/
+playwright-report/
+
+# Old pre-redesign version, kept locally only
+.backup-v1/
+
+# Personal launchers (the app opens directly from index.html)
+start.bat
+start2.bat
+
+# Editor and OS files
+.vscode/
+.idea/
+*.log
+Thumbs.db
+desktop.ini
+.DS_Store

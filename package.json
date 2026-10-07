@@ -1,0 +1,13 @@
+{
+  "name": "woerterwiese",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Liebevolle Deutsch-Lernspiele ohne Backend oder Build-Schritt",
+  "scripts": {
+    "test": "node --test tests/core.test.cjs",
+    "test:browser": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.63.0"
+  }
+}
