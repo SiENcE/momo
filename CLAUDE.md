@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-Wörterwiese: a learning game for primary school children, German, math and English; content exists for grades 1 and 2 (about 6–8 years); grades 3 and 4 so far only have the "Große Zahlen" games (place value up to a million). Momo the bunny guides short games (letters and sounds; tens and ones up to 100; English words, colours and numbers); earned stars buy seeds in a garden where the child grows food for Momo (a small Tamagotchi). All UI text is German and child-friendly; code, comments and commit messages are English.
+Momo (formerly "Wörterwiese"): a learning app for primary school children, German, math and English; content exists for grades 1 and 2 (about 6–8 years); grades 3 and 4 so far only have the "Große Zahlen" games (place value up to a million). Momo the bunny guides short games (letters and sounds; tens and ones up to 100; English words, colours and numbers); earned stars buy seeds in a garden where the child grows food for Momo (a small Tamagotchi). All UI text is German and child-friendly; code, comments and commit messages are English.
 
 ## Run & test
 
@@ -8,7 +8,7 @@ Wörterwiese: a learning game for primary school children, German, math and Engl
 - `npm test`: logic tests (`tests/core.test.cjs`, Node's built-in runner, fast). Run after every change to `core.js`.
 - `npm run test:browser`: Playwright on desktop and mobile viewports (about 3–4 minutes). Needs `npm install` and `npx playwright install chromium` once.
 - Single browser test: `npx playwright test -g "<test name>" --project desktop`.
-- Deploy package: `build-zip.bat` (or `build-zip.bat /nopause` in a terminal) writes `dist\woerterwiese.zip` with only the runtime files. **When adding a runtime file, add it to `FILES` in `build-zip.bat`** (folders such as `audio/` need their own copy line). Zip entries must use `/` separators, which is why `tools/make-zip.ps1` is used instead of `Compress-Archive`. Keep batch lines short: cmd reads batch files in 512-byte blocks and can mistake text in a very long line for a label.
+- Deploy package: `build-zip.bat` (or `build-zip.bat /nopause` in a terminal) writes `dist\momo.zip` with only the runtime files. **When adding a runtime file, add it to `FILES` in `build-zip.bat`** (folders such as `audio/` need their own copy line). Zip entries must use `/` separators, which is why `tools/make-zip.ps1` is used instead of `Compress-Archive`. Keep batch lines short: cmd reads batch files in 512-byte blocks and can mistake text in a very long line for a label.
 
 ## Architecture
 
@@ -22,7 +22,7 @@ Plain scripts loaded in this order: `core.js` → `garden.js` → `math.js` → 
 - `garden.js` (`window.WieseGarden`): renders Momo's garden into `#garden-root`, plus the shared `momoSvg(mood, worn)`, `momoKey` (re-render key: mood + worn items), `petMessage` and `needsMarkup` helpers used by the home screen. Feeding: drag a food button onto Momo (pointer events) or tap it (it flies to him); stroking (pointer move over Momo) and the ball also cheer him up.
 - `report.js` (`window.WieseReport.render(root, report)`): the parents' report view (`#report-view`, reached only via "Für Erwachsene → Lernstand ansehen"). All numbers come from `core.buildReport(state)`; `report.js` only renders (DOM built with `textContent`, no innerHTML).
 - Learning statistics live in `state.stats` (aggregated counters: per game, per sound for type/initial, per ABC letter, per day; capped sizes). `solved()` calls `core.recordTask` inside the same `save()` as the stars. "ok" means solved on the first try. Keep stats aggregated – no raw event log.
-- State lives in `localStorage["woerterwiese.v1"]` (key kept for migration; `version: 2`). Every write goes through `save(change)`, which re-reads storage under a Web Lock, applies `change`, writes and calls `refresh()`. Keep `sanitizeState` strict and migrate old versions rather than discarding them.
+- State lives in `localStorage["woerterwiese.v1"]` (the old app name; key kept so existing saves survive the rename – do not change it without a migration; `version: 2`). Internal globals (`window.Wiese`, `WieseMath`, …) also keep the old name. Every write goes through `save(change)`, which re-reads storage under a Web Lock, applies `change`, writes and calls `refresh()`. Keep `sanitizeState` strict and migrate old versions rather than discarding them.
 
 ## Grades
 

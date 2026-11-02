@@ -1,6 +1,6 @@
 @echo off
 setlocal
-rem Packs everything the web server needs into dist\woerterwiese.zip.
+rem Packs everything the web server needs into dist\momo.zip.
 rem Unpack the zip contents directly into the web root (or a sub folder).
 rem Usage: double-click, or "build-zip.bat /nopause" from a terminal.
 rem Keep lines short: cmd reads batch files in 512-byte blocks and can
@@ -11,8 +11,8 @@ set "NOPAUSE=%~1"
 set "FILES=index.html styles.css garden.css core.js garden.js"
 set "FILES=%FILES% math.js deutsch.js english.js"
 set "FILES=%FILES% report.js app.js"
-set "STAGE=dist\woerterwiese"
-set "ZIP=dist\woerterwiese.zip"
+set "STAGE=dist\momo"
+set "ZIP=dist\momo.zip"
 
 for %%F in (%FILES%) do (
   if not exist "%%F" (
