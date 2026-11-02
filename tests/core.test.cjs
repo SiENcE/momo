@@ -661,7 +661,21 @@ test("every game sits in exactly one category of a subject", () => {
 test("numbers are spoken as German words", () => {
   const words = { 0: "null", 1: "eins", 11: "elf", 16: "sechzehn", 17: "siebzehn", 21: "einundzwanzig", 30: "dreißig", 47: "siebenundvierzig", 99: "neunundneunzig", 100: "hundert" };
   for (const [n, word] of Object.entries(words)) assert.equal(C.numberWord(Number(n)), word);
-  assert.equal(C.numberWord(312), "312");
+  // Up to a million, as one word like in writing (101000: "hunderteintausend").
+  const big = {
+    101: "hunderteins",
+    312: "dreihundertzwölf",
+    1000: "tausend",
+    3052: "dreitausendzweiundfünfzig",
+    21000: "einundzwanzigtausend",
+    101000: "hunderteintausend",
+    452318: "vierhundertzweiundfünfzigtausenddreihundertachtzehn",
+    1000000: "eine Million",
+  };
+  for (const [n, word] of Object.entries(big)) assert.equal(C.numberWord(Number(n)), word);
+  assert.equal(C.numberWord(1000001), "1000001");
+  assert.equal(C.formatNumber(9999), "9999");
+  assert.equal(C.formatNumber(452318), "452 318");
 });
 
 test("math tasks fit tens and ones and offer the typical mistakes", () => {
@@ -1013,7 +1027,10 @@ test("grades: every game names the first level of each of its grades", () => {
       assert.ok(C.levelGrade(activity.id, level) >= C.levelGrade(activity.id, level - 1), activity.id);
   }
   const available = C.availableGrades().map((x) => x.id);
-  assert.deepEqual(available, [1, 2]);
+  // Grades 3 and 4 so far only through "Große Zahlen".
+  assert.deepEqual(available, [1, 2, 3, 4]);
+  assert.equal(C.levelGrade("tenfold", C.gradeStart("tenfold", 4)), 4);
+  assert.equal(C.levelGrade("placetable", C.maxLevel("placetable")), 4);
   // Grade 2 offers every game, grade 1 the ones that start in grade 1.
   assert.ok(C.ACTIVITIES.every((x) => C.inGrade(x.id, 2)));
   for (const id of ["merk", "extend", "place", "chart", "calc", "times"])
@@ -1057,7 +1074,7 @@ test("the grade is only the entry point: progression goes beyond it and below it
   // Going back to grade 1 never lowers a level.
   assert.equal(C.setGrade(state, 1), true);
   assert.equal(state.levels.clock, C.gradeStart("clock", 2));
-  assert.equal(C.setGrade(state, 3), false);
+  assert.equal(C.setGrade(state, 5), false);
   assert.equal(C.setGrade(state, "2"), false);
   assert.equal(state.settings.grade, 1);
   const first = C.defaultState();
@@ -1113,7 +1130,7 @@ test("the grade is stored strictly and old saves keep all games of grade 2", () 
   assert.equal(C.sanitizeState({ version: 1, settings: { rate: 0.8 } }).settings.grade, 2);
   assert.equal(C.sanitizeState({ version: 2, settings: { grade: 1 } }).settings.grade, 1);
   assert.equal(C.sanitizeState({ version: 2, settings: { grade: 0 } }).settings.grade, 0);
-  for (const grade of [3, 9, "1", null, 1.5])
+  for (const grade of [5, 9, "1", null, 1.5])
     assert.equal(C.sanitizeState({ version: 2, settings: { grade } }).settings.grade, 0);
   // A first grader may store levels of grade 2.
   const ahead = C.sanitizeState({ version: 2, levels: { clock: 6 }, settings: { grade: 1 } });
@@ -1157,4 +1174,52 @@ test("statistics count tasks by the grade of their level and the report shows ho
   assert.ok(second.games.includes("Uhr lesen"));
   assert.ok(report.strengths.some((x) => x.startsWith("Schon Aufgaben der 2. Klasse") && x.includes("Uhr lesen")));
   for (const area of report.areas) assert.ok(area.progress >= 0 && area.progress <= 1, area.id);
+});
+
+test("big numbers: bundling ten makes the next place, the chart reads with zeros", () => {
+  const random = seeded(11);
+  const noDigits = (text, where) => assert.ok(!/\d/.test(text || ""), `${where}: ${text}`);
+  for (let level = 0; level <= C.maxLevel("tenfold"); level++)
+    for (let i = 0; i < 60; i++) {
+      const q = C.makeQuestion("tenfold", level, null, random);
+      const config = C.LEVELS.tenfold[level];
+      noDigits(q.explain.speech, `tenfold/${level}`);
+      if (q.kind === "count") {
+        assert.ok(q.small >= config.from && q.big <= config.to && q.big > q.small);
+        assert.equal(Number(q.answer), 10 ** (q.big - q.small));
+      } else {
+        assert.ok(q.from >= config.from && q.from + 1 <= config.to);
+        const next = C.PLACES[q.from + 1];
+        if (q.kind === "name") assert.equal(q.answer, next.name);
+        else {
+          assert.equal(Number(q.answer), next.value);
+          // Typical mistakes: just one piece, a zero too many.
+          assert.ok(q.choices.includes(String(C.PLACES[q.from].value)));
+        }
+      }
+    }
+  for (let level = 0; level <= C.maxLevel("placetable"); level++)
+    for (let i = 0; i < 60; i++) {
+      const q = C.makeQuestion("placetable", level, null, random);
+      const config = C.LEVELS.placetable[level];
+      noDigits(q.speech, `placetable/${level}`);
+      noDigits(q.explain.speech, `placetable/${level}`);
+      assert.ok(q.number >= 1 && q.number <= 1000000);
+      assert.equal(Number([...q.digits].reverse().join("")), q.number);
+      assert.ok(q.places >= q.digits.length && q.places === Math.max(config.places, q.digits.length));
+      if (config.digits) assert.ok(config.digits.includes(q.digits.length));
+      if (q.kind === "digit") assert.equal(q.answer, String(q.digits[q.at]));
+      if (q.kind === "split") {
+        assert.ok(q.parts.length >= 2);
+        assert.equal(q.parts.reduce((a, b) => a + b, 0), q.number);
+        assert.equal(q.answer, String(q.parts[q.gap]));
+      }
+      if (q.kind === "read" || q.kind === "compose") {
+        assert.equal(q.answer, String(q.number));
+        // A forgotten zero is always among the cards.
+        if (String(q.number).includes("0")) assert.ok(q.choices.includes(q.zeroSlip), `${q.number}`);
+      }
+    }
+  const q = C.makeQuestion("placetable", 6, null, seeded(3));
+  assert.equal(q.shown, C.formatNumber(q.number));
 });

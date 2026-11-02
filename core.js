@@ -95,6 +95,8 @@
     { id: "clock", icon: "🕒", title: "Uhr lesen", color: "mint", grades: { 1: 0, 2: 2 } },
     { id: "syllables", icon: "🥁", title: "Silben klatschen", color: "peach", grades: { 1: 0, 2: 4 } },
     { id: "extend", icon: "🐍", title: "Wörter verlängern", color: "mint", grades: { 2: 0 } },
+    { id: "tenfold", icon: "📦", title: "Immer zehn", color: "peach", grades: { 2: 0, 3: 2, 4: 4 } },
+    { id: "placetable", icon: "🧱", title: "Stellentafel", color: "sky", grades: { 2: 0, 3: 2, 4: 5 } },
     { id: "enwords", icon: "🎧", title: "Hör und zeig", color: "sky", grades: { 1: 0, 2: 5 } },
     { id: "enmissing", icon: "🙈", title: "Was fehlt?", color: "rose", grades: { 1: 0, 2: 3 } },
     { id: "enpattern", icon: "🔁", title: "Muster-Reihe", color: "lavender", grades: { 1: 0, 2: 3 } },
@@ -181,6 +183,15 @@
       report: "Vergleichen & Ordnen",
       color: "lavender",
       games: ["compare", "sort", "adjacent"],
+    },
+    {
+      id: "big",
+      subject: "mathe",
+      icon: "🐘",
+      title: "Große Zahlen",
+      report: "Stellenwerte bis zur Million",
+      color: "peach",
+      games: ["tenfold", "placetable"],
     },
     {
       id: "calc",
@@ -344,6 +355,28 @@
   const EN_ALL = Object.keys(EN_TOPICS);
   // Every game gets gradually harder. Each first-try success climbs one step.
   const LEVELS = {
+    // Bundling: ten of a place make one of the next (index into PLACES).
+    tenfold: [
+      { ask: ["bundle"], from: 0, to: 2, choices: 3, label: "10 Einer, 10 Zehner bündeln" },
+      { ask: ["count"], from: 0, to: 2, span: 2, choices: 3, label: "Wie viele Einer hat ein Hunderter?" },
+      { ask: ["bundle", "name"], from: 1, to: 3, choices: 3, label: "10 Hunderter sind 1 Tausender" },
+      { ask: ["count"], from: 0, to: 3, span: 3, choices: 4, label: "Wie viele Einer hat ein Tausender?" },
+      { ask: ["bundle", "name"], from: 2, to: 5, choices: 4, label: "Zehntausender, Hunderttausender" },
+      { ask: ["bundle", "name"], from: 3, to: 6, choices: 4, label: "bis zur Million" },
+      { ask: ["count"], from: 2, to: 6, span: 3, choices: 4, label: "Wie viele Tausender hat eine Million?" },
+      { ask: ["bundle", "name", "count"], from: 0, to: 6, span: 6, choices: 4, label: "alles gemischt" },
+    ],
+    // Place-value chart: "places" columns, numbers with "digits" digits.
+    placetable: [
+      { ask: ["read"], places: 3, min: 11, max: 100, choices: 3, label: "Stellentafel bis 100" },
+      { ask: ["digit"], places: 3, min: 11, max: 100, choices: 3, label: "Zehner und Einer ablesen" },
+      { ask: ["read"], places: 3, digits: [3], choices: 3, label: "Hunderter: bis 1000" },
+      { ask: ["read", "compose"], places: 3, digits: [3], zeros: true, choices: 4, label: "mit Nullen: 405, 730" },
+      { ask: ["digit", "split"], places: 3, digits: [3], zeros: true, choices: 4, label: "zerlegen: 405 = 400 + 5" },
+      { ask: ["read", "compose"], places: 5, digits: [4, 5], zeros: true, choices: 4, label: "Tausender: bis 100 000" },
+      { ask: ["read", "compose"], places: 7, digits: [5, 6], zeros: true, choices: 4, label: "bis zur Million" },
+      { ask: ["digit", "split"], places: 7, digits: [4, 5, 6], zeros: true, choices: 4, label: "große Zahlen zerlegen" },
+    ],
     type: [
       { range: "ABCDEFGH", keys: 5, label: "A–H, 5 Tasten" },
       { range: "ABCDEFGH", keys: 7, label: "A–H, alle Tasten" },
@@ -1242,7 +1275,20 @@
   const TEEN_WORDS = ["zehn", "elf", "zwölf", "dreizehn", "vierzehn", "fünfzehn", "sechzehn", "siebzehn", "achtzehn", "neunzehn"];
   const TEN_WORDS = ["", "zehn", "zwanzig", "dreißig", "vierzig", "fünfzig", "sechzig", "siebzig", "achtzig", "neunzig"];
   function numberWord(n) {
-    if (!Number.isInteger(n) || n < 0 || n > 100) return String(n);
+    if (!Number.isInteger(n) || n < 0 || n > 1000000) return String(n);
+    if (n === 1000000) return "eine Million";
+    if (n >= 1000) {
+      const thousands = Math.floor(n / 1000);
+      const rest = n % 1000;
+      // 101000: "hunderteintausend", not "hunderteinstausend".
+      const head = thousands === 1 ? "" : numberWord(thousands).replace(/eins$/, "ein");
+      return `${head}tausend${rest ? numberWord(rest) : ""}`;
+    }
+    if (n > 100) {
+      const hundreds = Math.floor(n / 100);
+      const rest = n % 100;
+      return `${hundreds === 1 ? "" : UNIT_WORDS[hundreds]}hundert${rest ? numberWord(rest) : ""}`;
+    }
     if (n === 100) return "hundert";
     if (n < 10) return UNIT_WORDS[n];
     if (n < 20) return TEEN_WORDS[n - 10];
@@ -1252,6 +1298,222 @@
   }
   // "ein Zehner", "vier Einer"
   const countWord = (n) => (n === 1 ? "ein" : numberWord(n));
+  // From 10 000 on digits are grouped in threes with a thin space (452 318).
+  const formatNumber = (n) =>
+    n >= 10000 ? String(n).replace(/\B(?=(\d{3})+(?!\d))/g, "\u202F") : String(n);
+
+  /*
+   * The places of our number system, small to large. Shapes and names repeat
+   * in threes: cube, rod, plate – Einer, Zehner, Hunderter; Tausender,
+   * Zehntausender, Hunderttausender; then the Million. Every place is ten
+   * times the one before.
+   */
+  const PLACES = [
+    { id: "E", name: "Einer", plural: "Einer", dativePlural: "Einern", one: "ein Einer", dative: "einem Einer", value: 1 },
+    { id: "Z", name: "Zehner", plural: "Zehner", dativePlural: "Zehnern", one: "ein Zehner", dative: "einem Zehner", value: 10 },
+    { id: "H", name: "Hunderter", plural: "Hunderter", dativePlural: "Hundertern", one: "ein Hunderter", dative: "einem Hunderter", value: 100 },
+    { id: "T", name: "Tausender", plural: "Tausender", dativePlural: "Tausendern", one: "ein Tausender", dative: "einem Tausender", value: 1000 },
+    { id: "ZT", name: "Zehntausender", plural: "Zehntausender", dativePlural: "Zehntausendern", one: "ein Zehntausender", dative: "einem Zehntausender", value: 10000 },
+    { id: "HT", name: "Hunderttausender", plural: "Hunderttausender", dativePlural: "Hunderttausendern", one: "ein Hunderttausender", dative: "einem Hunderttausender", value: 100000 },
+    { id: "M", name: "Million", plural: "Millionen", dativePlural: "Millionen", one: "eine Million", dative: "einer Million", value: 1000000 },
+  ];
+  // "3 Tausender", "1 Million", "2 Millionen" and the spoken twin.
+  const placeCount = (digit, place) => ({
+    text: `${digit} ${digit === 1 ? place.name : place.plural}`,
+    speech: `${digit === 1 ? (place.id === "M" ? "eine" : "ein") : numberWord(digit)} ${digit === 1 ? place.name : place.plural}`,
+  });
+  // Digits of n by place, ones first (3052 → [2, 5, 0, 3]).
+  const digitsOf = (n) => [...String(n)].reverse().map(Number);
+  // "3052 = 3 Tausender, 0 Hunderter, 5 Zehner, 2 Einer" (all places, zeros too).
+  function placesExplain(n, places = digitsOf(n).length) {
+    const digits = digitsOf(n);
+    const parts = Array.from({ length: places }, (_, i) => placeCount(digits[i] || 0, PLACES[i])).reverse();
+    return {
+      text: `${formatNumber(n)} = ${parts.map((x) => x.text).join(", ")}.`,
+      speech: `${capitalize(numberWord(n))}: ${parts.slice(0, -1).map((x) => x.speech).join(", ")} und ${parts.at(-1).speech}.`,
+    };
+  }
+  /*
+   * Answer plus distractors in the given order of priority (typical mistakes
+   * first); only whole numbers from 0 to a million, each once.
+   */
+  function bigOptions(answer, candidates, count, random) {
+    const options = [];
+    for (const x of candidates)
+      if (Number.isInteger(x) && x >= 0 && x <= 1000000 && x !== answer && !options.includes(x))
+        options.push(x);
+    for (let k = 1; options.length < count - 1; k++)
+      for (const x of [answer + k, answer - k])
+        if (x >= 0 && !options.includes(x) && options.length < count - 1) options.push(x);
+    return shuffle([answer, ...options.slice(0, count - 1)], random).map(String);
+  }
+  // A number with a given count of digits; with "zeros" at least one inner 0.
+  function bigNumber(config, random) {
+    if (config.max) return between(config.min, config.max, random);
+    const length = pick(config.digits, random);
+    for (;;) {
+      const digits = Array.from({ length }, (_, i) =>
+        i === 0 ? between(1, 9, random) : config.zeros && random() < 0.35 ? 0 : between(1, 9, random),
+      );
+      const inner = digits.slice(1).includes(0);
+      if (Boolean(config.zeros) === inner || length < 3) return Number(digits.join(""));
+    }
+  }
+  function generateBig(mode, config, random) {
+    const kind = pick(config.ask, random);
+    if (mode === "tenfold") {
+      if (kind === "count") {
+        // How many of a small place fit into a big one: 10, 100, 1000 …
+        const small = between(config.from, config.to - 1, random);
+        const big = between(small + 1, Math.min(config.to, small + config.span), random);
+        const answer = 10 ** (big - small);
+        const powers = [10, 100, 1000, 10000, 100000, 1000000].sort(
+          (a, b) => Math.abs(Math.log10(a / answer)) - Math.abs(Math.log10(b / answer)),
+        );
+        return {
+          kind,
+          key: `count${small}-${big}`,
+          small,
+          big,
+          answer: String(answer),
+          choices: bigOptions(answer, powers, config.choices, random),
+          explain: {
+            text: `${capitalize(PLACES[big].one)} hat ${formatNumber(answer)} ${PLACES[small].plural}. Jede Stelle ist 10-mal so groß wie die davor.`,
+            speech: `${capitalize(PLACES[big].one)} hat ${numberWord(answer)} ${PLACES[small].plural}. Jede Stelle ist zehnmal so groß wie die davor.`,
+          },
+          cue: `Vorlesen: Wie viele ${PLACES[small].plural} hat ${PLACES[big].one}?`,
+        };
+      }
+      // Ten pieces of one place are bundled: how much is it, what is it called?
+      const from = between(config.from, config.to - 1, random);
+      const unit = PLACES[from];
+      const next = PLACES[from + 1];
+      const explain = {
+        text: `10 ${unit.plural} sind ${next.one}: 10 · ${formatNumber(unit.value)} = ${formatNumber(next.value)}.`,
+        speech: `Zehn ${unit.plural} sind ${next.one}. Zehn mal ${numberWord(unit.value)} ist ${numberWord(next.value)}.`,
+      };
+      if (kind === "name") {
+        const names = [PLACES[from + 2], unit, PLACES[from - 1], PLACES[from + 3], PLACES[from - 2]]
+          .filter(Boolean)
+          .map((x) => x.name);
+        return {
+          kind,
+          key: `name${from}`,
+          from,
+          answer: next.name,
+          choices: shuffle([next.name, ...names.slice(0, config.choices - 1)], random),
+          explain,
+          cue: `Vorlesen: Aus 10 ${unit.dativePlural} wird ein neues Teil. Wie heißt es?`,
+        };
+      }
+      return {
+        kind,
+        key: `bundle${from}`,
+        from,
+        answer: String(next.value),
+        // One piece only, the ten pieces counted, a zero too many, added up.
+        choices: bigOptions(
+          next.value,
+          [unit.value, 10 * next.value, 10, unit.value + 10],
+          config.choices,
+          random,
+        ),
+        explain,
+        cue: `Vorlesen: 10 ${unit.plural} – wie viel ist das?`,
+      };
+    }
+    // placetable
+    let number = bigNumber(config, random);
+    // Splitting needs at least two parts (not 300 = ?).
+    while (kind === "split" && digitsOf(number).filter(Boolean).length < 2) number = bigNumber(config, random);
+    const digits = digitsOf(number);
+    const places = Math.max(config.places, digits.length);
+    const base = { kind, number, digits, places, shown: formatNumber(number) };
+    if (kind === "digit") {
+      // Which digit stands at a place? Typical slip: reading the neighbour.
+      const at = between(0, digits.length - 1, random);
+      const answer = digits[at];
+      const pool = [digits[at + 1], digits[at - 1], answer + 1, answer - 1, ...digits]
+        .filter((x) => Number.isInteger(x) && x >= 0 && x <= 9 && x !== answer);
+      const options = [...new Set(pool)];
+      for (let d = 0; options.length < config.choices - 1; d++) if (d !== answer && !options.includes(d)) options.push(d);
+      return {
+        ...base,
+        at,
+        answer: String(answer),
+        choices: shuffle([answer, ...options.slice(0, config.choices - 1)], random).map(String),
+        speech: numberWord(number),
+        explain: {
+          text: `${formatNumber(number)} hat ${placeCount(answer, PLACES[at]).text}.`,
+          speech: `${capitalize(numberWord(number))} hat ${placeCount(answer, PLACES[at]).speech}.`,
+        },
+        cue: `Zahl: ${formatNumber(number)}`,
+      };
+    }
+    if (kind === "split") {
+      // 3052 = 3000 + ? + 2: the parts with a digit, one of them is the gap.
+      const parts = digits
+        .map((d, i) => ({ d, i, value: d * 10 ** i }))
+        .filter((x) => x.d)
+        .reverse();
+      const gapIndex = between(0, parts.length - 1, random);
+      const gapPart = parts[gapIndex];
+      const answer = gapPart.value;
+      return {
+        ...base,
+        parts: parts.map((x) => x.value),
+        gap: gapIndex,
+        answer: String(answer),
+        // Zeros forgotten, one place too far right or left.
+        choices: bigOptions(answer, [gapPart.d, answer / 10, answer * 10, answer + gapPart.d], config.choices, random),
+        speech: `${numberWord(number)} ist ${parts.map((x, i) => (i === gapIndex ? "wie viel" : numberWord(x.value))).join(" plus ")}?`,
+        explain: {
+          text: `${formatNumber(number)} = ${parts.map((x) => formatNumber(x.value)).join(" + ")}.`,
+          speech: `${capitalize(numberWord(number))} ist ${parts.map((x) => numberWord(x.value)).join(" plus ")}.`,
+        },
+        cue: `Vorlesen: ${formatNumber(number)} = ${parts.map((x, i) => (i === gapIndex ? "?" : formatNumber(x.value))).join(" + ")}`,
+      };
+    }
+    // read (dots in the chart) or compose (3 Tausender, 5 Zehner, 2 Einer).
+    const noZeros = Number(String(number).replace(/0/g, ""));
+    const swapAt = digits.findIndex((d, i) => i > 0 && d && digits[i - 1] && d !== digits[i - 1]);
+    const swapped =
+      swapAt > 0
+        ? Number(
+            [...digits]
+              .map((d, i) => (i === swapAt ? digits[swapAt - 1] : i === swapAt - 1 ? digits[swapAt] : d))
+              .reverse()
+              .join(""),
+          )
+        : null;
+    const sum = digits.reduce((a, b) => a + b, 0);
+    const shift = number * 10 <= 1000000 ? number * 10 : Math.floor(number / 10);
+    const chips = digits
+      .map((d, i) => ({ d, place: PLACES[i] }))
+      .filter((x) => x.d)
+      .reverse()
+      .map((x) => placeCount(x.d, x.place));
+    return {
+      ...base,
+      answer: String(number),
+      swap: swapped == null ? undefined : String(swapped),
+      zeroSlip: noZeros !== number ? String(noZeros) : undefined,
+      choices: bigOptions(
+        number,
+        [noZeros, swapped, kind === "read" ? sum : shift, shift, number + 10 ** between(0, digits.length - 1, random)],
+        config.choices,
+        random,
+      ),
+      chips: chips.map((x) => x.text),
+      speech: kind === "compose" ? chips.map((x) => x.speech).join(", ") : undefined,
+      explain: placesExplain(number),
+      cue:
+        kind === "compose"
+          ? `Vorlesen: ${chips.map((x) => x.text).join(", ")}`
+          : "Vorlesen: Welche Zahl steht in der Stellentafel?",
+    };
+  }
+
   const between = (min, max, random) => min + Math.floor(random() * (max - min + 1));
   const placeOf = (n) => ({ tens: Math.floor(n / 10), ones: n % 10 });
   function placeExplain(n) {
@@ -1805,6 +2067,7 @@
   }
   function generate(mode, config, previous, random) {
     if (ENGLISH_GAMES.includes(mode)) return generateEnglish(mode, config, previous, random);
+    if (mode === "tenfold" || mode === "placetable") return generateBig(mode, config, random);
     if (mode === "type") {
       const clear = (letters) =>
         [...letters].filter((x) => !AMBIGUOUS_LAUTE.includes(x));
@@ -3680,6 +3943,7 @@
     tens: "Zehner bündeln mit Alltagsdingen: je 10 Nudeln in einen Becher, die übrigen einzeln daneben. Dann gemeinsam sagen: „4 Zehner und 7 Einer sind 47.“",
     space: "Zahlen verorten: auf einem Maßband oder Lineal zeigen lassen („Wo ist 37?“), eine Hundertertafel ausdrucken und Wege gehen – nach rechts 1 mehr, nach unten 10 mehr.",
     compare: "Vergleichen im Alltag: Hausnummern, Preise oder Seitenzahlen – „Welche ist größer? Schau zuerst auf die Zehner.“ Das Krokodil frisst immer die größere Zahl.",
+    big: "Große Zahlen greifbar machen: 10 Büroklammern zu einer Kette, 10 Ketten zu einem Bündel – so entsteht aus Einern ein Hunderter. Zahlen vom Kassenzettel oder aus der Zeitung in eine selbst gezeichnete Stellentafel schreiben und laut lesen; leere Stellen bekommen eine Null.",
     calc: "Mit Zehnern rechnen: 10-Cent-Münzen oder Zehnerstangen legen. Bei 52 + 30 bleiben die Einer gleich, nur die Zehner ändern sich.",
     sets: "Mengen im Alltag: Besteck oder Murmeln zählen, Paare bilden („Wer hat mehr?“), eine Strichliste führen und Spielzeug nach zwei Merkmalen sortieren – z. B. rot und rund. Was gehört in beide Gruppen?",
     enlisten:
@@ -4131,6 +4395,8 @@
     gradeStart,
     setGrade,
     numberWord,
+    formatNumber,
+    PLACES,
     maxLevel,
     clampLevel,
     makeQuestion,

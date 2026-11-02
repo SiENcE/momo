@@ -594,7 +594,7 @@ test("first start asks for the grade; it sets the entry point and the games show
   // with its grade: the child may climb beyond its own grade.
   await page.locator("#parents-button").click();
   await expect(page.locator("#grade-select")).toHaveValue("1");
-  await expect(page.locator('#grade-select option[value="3"]')).toHaveAttribute("disabled", "");
+  await expect(page.locator("#grade-select option")).toHaveCount(C.GRADES.length);
   const bundle = await levelSelect(page, "bundle");
   await expect(bundle.locator("option")).toHaveCount(C.maxLevel("bundle") + 1);
   await expect(bundle.locator("option").last()).toContainText("(Kl. 2)");

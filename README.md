@@ -22,14 +22,17 @@ Beim ersten Start fragt Momo einmal: „In welche Klasse gehst du?“ Angeboten 
 | --- | --- |
 | 1. Klasse | die ersten Stufen von: Laute, Anlaute, Laute verbinden, ABC, Silben, Merken; Mengen, Zahlen bis 20, über die 10 rechnen, Geld bis 20 Cent, volle und halbe Stunden, Säulen lesen; Englisch |
 | 2. Klasse | die höheren Stufen davon und zusätzlich Merkwörter, Wörter verlängern, Zahlenhaus, Hundertertafel, Weiterzählen, Vergleichen, Ordnen, Zahlen-Nachbarn, Zehner rechnen und Einmaleins |
-| 3. und 4. Klasse | in Vorbereitung |
+| 3. Klasse | Große Zahlen bis 1000: 10 Hunderter sind 1 Tausender, Stellentafel mit Hundertern, Nullen, Zerlegen (weitere Spiele folgen) |
+| 4. Klasse | Große Zahlen bis zur Million: Zehntausender, Hunderttausender, Million, große Zahlen lesen und zerlegen (weitere Spiele folgen) |
+
+In der 3. und 4. Klasse starten die übrigen Spiele auf den Stufen der 2. Klasse und werden von dort aus schwerer.
 
 Spiele, die erst in einer höheren Klasse beginnen (z. B. Zahlenhaus oder Einmaleins), erscheinen für jüngere Kinder, sobald sie in einem passenden Spiel alle Aufgaben ihrer Klasse geschafft haben – also dort auf den Stufen der höheren Klasse angekommen sind. Passend heißt: ein Spiel aus demselben Bereich (Zahlen-Blick oder Zahlen bauen öffnen das Zahlenhaus, Silben klatschen öffnet Merkwörter und Wörter verlängern). Hat der Bereich kein solches Spiel (Vergleichen, Einmaleins), reicht ein Spiel desselben Fachs. Das Kind sieht dann auf der Ergebnis-Seite „Neu: Spiel …!“. Einmal geöffnete Spiele bleiben offen, auch wenn es später wieder leichter wird.
 
 Sonst muss das Kind nichts einstellen. Auf der Startseite gibt es einen großen **Spielen**-Knopf, der das am längsten nicht gespielte Spiel startet. Darunter wählt das Kind in drei Schritten selbst:
 
 1. **Fach:** Deutsch, Mathe oder Englisch
-2. **Bereich:** bei Deutsch *Laute üben*, *ABC üben*, *Richtig schreiben* und *Zu zweit*; bei Mathe *Mengen*, *Zehner und Einer*, *Zahlen finden*, *Vergleichen*, *Rechnen*, *Einmaleins*, *Geld und Uhr* und *Diagramme*; bei Englisch *Hören und zeigen*, *Farben und Zahlen* und *Zu zweit*
+2. **Bereich:** bei Deutsch *Laute üben*, *ABC üben*, *Richtig schreiben* und *Zu zweit*; bei Mathe *Mengen*, *Zehner und Einer*, *Große Zahlen*, *Zahlen finden*, *Vergleichen*, *Rechnen*, *Einmaleins*, *Geld und Uhr* und *Diagramme*; bei Englisch *Hören und zeigen*, *Farben und Zahlen* und *Zu zweit*
 3. **Spiel** aus diesem Bereich
 
 Das ✕ im Spiel und „Anderes Spiel“ führen zurück zum Bereich, „← Zurück“ eine Stufe höher.
@@ -56,7 +59,7 @@ Das ✕ im Spiel und „Anderes Spiel“ führen zurück zum Bereich, „← Zur
 | Quatschwort-Echo 👥 | Fantasiewörter nachsprechen           | 2 bis 5 Silben, schwierige Lautverbindungen, zwei Wörter                      |
 | Mitmach-Spiel 👥   | Bewegungsfolgen nachmachen            | 2 bis 5 Bewegungen, auch rückwärts                                            |
 
-## Mathe: die achtzehn Spiele (Zahlenraum bis 100)
+## Mathe: die zwanzig Spiele (Zahlenraum bis 100, große Zahlen bis zur Million)
 
 Die Aufgaben orientieren sich an typischen Arbeitsheft-Seiten der 2. Klasse.
 
@@ -122,6 +125,15 @@ Bei der Uhr kommen falsche Antworten nur aus Uhrzeiten, die auf der Stufe schon 
 | ------------ | ------------------------------------------------- | -------------------- |
 | Säulen lesen | Säulendiagramm mit einem Kästchen pro Kind (Lieblingsobst, -tiere, -sport) | Wert ablesen → am meisten/am wenigsten → Wie viele mehr? → Wie viele zusammen? |
 
+**Große Zahlen** (ab der 2. Klasse, bis zur Million)
+
+| Spiel        | Was wird geübt?                                   | Wie es schwerer wird |
+| ------------ | ------------------------------------------------- | -------------------- |
+| Immer zehn   | Das Prinzip unseres Zahlensystems: 10 gleiche Teile ergeben das nächste, größere Teil. Einer (Würfel) → Zehner (Stange) → Hunderter (Platte) → Tausender (großer Würfel) → Zehntausender → Hunderttausender → Million. Wie viel sind 10 Hunderter? Wie heißt das neue Teil? Wie viele Einer hat ein Tausender? | 10 Einer, 10 Zehner (2. Klasse) → Hunderter und Tausender (3. Klasse) → bis zur Million (4. Klasse) → alles gemischt |
+| Stellentafel | Zahlen in der Stellentafel (M, HT, ZT, T, H, Z, E) mit Plättchen lesen, aus „3 Tausender, 5 Zehner, 2 Einer“ die Zahl bilden, eine Stelle ablesen, zerlegen (3052 = 3000 + 50 + 2) | bis 100 (2. Klasse) → bis 1000, auch mit Nullen (3. Klasse) → bis 100 000 → bis zur Million (4. Klasse) |
+
+Die Bilder zeigen das Muster, das sich wiederholt: Würfel, Stange, Platte – und dann wieder Würfel (der Tausender ist ein großer Würfel aus 1000 kleinen), Stange, Platte. Genauso wiederholen sich die Namen: Einer, Zehner, Hunderter – Tausender, Zehntausender, Hunderttausender. In der Stellentafel trennt ein dicker Strich die Dreiergruppen, so wie die Lücke in 452 318. Typische Fehler sind als falsche Antworten dabei: die Null vergessen (3052 → 352), eine Stelle verrutscht (300 statt 3000), Ziffern vertauscht, alle Plättchen zusammengezählt, „10 Hunderter = 100“. Nach dem zweiten Fehler zeigt Momo die Treppe der Stellen mit „×10“ dazwischen bzw. die Ziffern unter der Stellentafel; leere Stellen werden als Nullen markiert.
+
 Die gesuchte Zahl wird nie vorgelesen oder angezeigt. Zahlen spricht Momo immer als Wörter („siebenundvierzig“). Als falsche Antworten kommen typische Fehler vor: vertauschte Ziffern, alle Teile als Einer gezählt (4 + 7 = 11), die Null vergessen (50 + 30 = 8), Zeilen und Spalten der Hundertertafel verwechselt oder ein Zehner daneben. Nach dem ersten Fehler sagt Momo, welche Zahl nicht passt, und gibt einen Tipp. Nach dem zweiten erscheint sichtbare Hilfe: Beschriftung 10, 20, 30 an den Stangen, Z/E im Zahlenhaus, mehr Zahlen am Zahlenstrahl, die ganze Hundertertafel, die Schritte (+2) zwischen den Zahlen, Zehner und Einer beim Vergleichen, ein Zehnerfeld beim Ergänzen oder nummerierte Kästchen im Diagramm. Nach dem Lösen erscheint die Antwort in der Lücke, und Momo erklärt sie noch einmal („47 = 4 Zehner und 7 Einer“, „52 + 30 = 82“).
 
 Die Spiele mit 👥 spielt ihr gemeinsam: Ein Erwachsener entscheidet mit „Hat geklappt“ oder „Noch nicht ganz“. Es gibt keine Mikrofonaufnahme und keine Spracherkennung.
@@ -176,7 +188,7 @@ Momo ist ein kleines Haustier, um das sich das Kind kümmert:
 
 „Für Erwachsene“ unten auf der Seite ist in vier Reiter geteilt:
 
-- **Überblick:** die Klasse (den Einstieg) wählen, den Lernstand öffnen und das Wichtigste zum Spiel. Klassen ohne Spiele sind ausgegraut. Beim Wechsel rücken Spiele, die noch unter dem Einstieg der neuen Klasse stehen, auf diesen Einstieg vor; höhere Stufen bleiben erhalten.
+- **Überblick:** die Klasse (den Einstieg) wählen, den Lernstand öffnen und das Wichtigste zum Spiel. Klassen ohne Spiele wären ausgegraut (zurzeit haben alle vier Klassen Spiele). Beim Wechsel rücken Spiele, die noch unter dem Einstieg der neuen Klasse stehen, auf diesen Einstieg vor; höhere Stufen bleiben erhalten.
 - **Stufen:** die Stufe jedes Spiels von Hand setzen, falls die automatische Stufe nicht passt. Hinter jeder Stufe steht ihre Klasse („Kl. 2“). Die Spiele sind nach Fach (aufklappbar) und Bereich gruppiert.
 - **Vorlesen:** Sprachausgabe ganz ein- und ausschalten, deutsche und englische Stimme, Tempo, automatisches Vorlesen, Kleinbuchstaben und die Laute zum Probehören.
 - **Daten:** Datenschutz und „Fortschritt zurücksetzen“.
