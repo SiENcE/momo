@@ -35,11 +35,20 @@ async function load(page, saved = {}, autoSpeak = true) {
           voiceURI: "test",
           localService: true,
         },
+        {
+          name: "Test English",
+          lang: "en-GB",
+          voiceURI: "test-en",
+          localService: true,
+        },
       ];
       synth.cancel = () => {};
+      // Which texts went to the English voice (with their language).
+      synth.english = [];
       synth.speak = (utterance) => {
         synth.current = utterance;
         synth.spoken.push(utterance.text);
+        if (utterance.lang?.startsWith("en")) synth.english.push(utterance.text);
         utterance.onstart?.();
         if (!synth.hold)
           setTimeout(() => utterance.onend?.(), synth.durationFor(utterance.text));
@@ -67,10 +76,11 @@ const stored = (page) =>
 test("plant with stars, water twice, harvest and feed Momo", async ({
   page,
 }) => {
+  const carrot = C.CROPS[0];
   await page.clock.install();
   await load(page, {
-    stars: 3,
-    totalStars: 3,
+    stars: carrot.cost + 1,
+    totalStars: carrot.cost + 1,
     pet: { full: 20, joy: 50, updatedAt: 0 },
   });
   await expect(page.locator("#garden-alert")).toBeVisible();
@@ -82,20 +92,21 @@ test("plant with stars, water twice, harvest and feed Momo", async ({
   await expect(page.locator("[data-seed]")).toHaveCount(1);
   await page.locator('[data-seed="carrot"]').click();
   await expect(page.locator("#seed-picker")).toBeHidden();
-  await expect(page.locator("#total-stars")).toHaveText("2");
+  await expect(page.locator("#total-stars")).toHaveText("1");
   await expect(bed(page, 0)).toHaveAttribute("data-state", "dry");
   await expect(page.locator("#pet-bubble")).toContainText("Durst");
   // Nothing grows before watering.
-  await page.clock.runFor(120000);
+  await page.clock.fastForward(2 * carrot.grow);
   await expect(bed(page, 0)).toHaveAttribute("data-state", "dry");
   await bed(page, 0).click();
   await expect(bed(page, 0)).toHaveAttribute("data-state", "growing");
   await bed(page, 0).click();
   await expect(page.locator("#garden-status-text")).toContainText("wächst noch");
-  await page.clock.runFor(31000);
+  await page.clock.fastForward(carrot.grow / 2 + 1000);
   await expect(bed(page, 0)).toHaveAttribute("data-state", "dry");
   await bed(page, 0).click();
-  await page.clock.runFor(31000);
+  await expect(bed(page, 0)).toHaveAttribute("data-state", "growing");
+  await page.clock.fastForward(carrot.grow / 2 + 1000);
   await expect(bed(page, 0)).toHaveAttribute("data-state", "ripe");
   await bed(page, 0).click();
   await expect(bed(page, 0)).toHaveAttribute("data-state", "empty");
@@ -104,8 +115,10 @@ test("plant with stars, water twice, harvest and feed Momo", async ({
   await expect(page.locator("#garden-status-text")).toContainText("Mampf");
   await expect(page.locator('[data-food="carrot"]')).toContainText("1");
   const state = await stored(page);
-  expect(Math.round(state.pet.full)).toBe(40);
-  expect(state.stars).toBe(2);
+  // One carrot, minus a little hunger while the carrot grew.
+  expect(state.pet.full).toBeGreaterThan(20 + carrot.full - 1);
+  expect(state.pet.full).toBeLessThanOrEqual(20 + carrot.full);
+  expect(state.stars).toBe(1);
   expect(state.food.carrot).toBe(1);
 });
 
@@ -127,7 +140,7 @@ test("seeds cost stars; locked beds and seeds unlock with progress", async ({
     "true",
   );
   await page.locator('[data-seed="carrot"]').click({ force: true });
-  await expect(page.locator("#garden-status-text")).toContainText("1 ⭐");
+  await expect(page.locator("#garden-status-text")).toContainText(`${C.CROPS[0].cost} ⭐`);
   await expect(bed(page, 1)).toHaveAttribute("data-state", "empty");
   await page.locator("#close-seeds").click();
   await expect(page.locator("#seed-picker")).toBeHidden();
@@ -192,13 +205,16 @@ for (const activity of C.ACTIVITIES) {
     await openGame(page, activity.id);
     const first = await page.evaluate(() => window.WieseDebug.question);
     // "type" plays its content as a sound file instead of the voice; math
-    // games read their content (numbers as words) only where it is no answer.
-    const withContent =
-      ["initial", "merk", "memory", "echo", "movement"].includes(activity.id) ||
-      (C.MATH_GAMES.includes(activity.id) && Boolean(first.speech));
+    // games read their content (numbers as words) only where it is no answer;
+    // English games hand their words to the English voice.
+    const content = [first.speech]
+      .flat()
+      .filter((part) => typeof part === "string" || part?.en)
+      .map((part) => part.en ?? part);
+    const withContent = content.length > 0;
     await expect
       .poll(() => page.evaluate(() => speechSynthesis.spoken.length))
-      .toBe(withContent ? 2 : 1);
+      .toBe(1 + content.length);
     const texts = await page.evaluate(() => speechSynthesis.spoken);
     const q = await page.evaluate(() => window.WieseDebug.question);
     if (activity.id !== "neighbor")
@@ -206,7 +222,11 @@ for (const activity of C.ACTIVITIES) {
         await page.locator("#game-instruction").textContent(),
       );
     else expect(texts[0]).toMatch(/^Welcher Buchstabe (kommt|steht)/);
-    if (withContent) expect(texts[1]).toBe(q.speech);
+    if (withContent) expect(texts.slice(1)).toEqual(content);
+    if (C.ENGLISH_GAMES.includes(activity.id))
+      expect(await page.evaluate(() => speechSynthesis.english)).toEqual(
+        [first.speech].flat().filter((part) => part?.en).map((part) => part.en),
+      );
     if (["type", "blend"].includes(activity.id))
       await expect
         .poll(() => page.evaluate(() => window.WieseDebug.played.at(-1)))
@@ -214,7 +234,7 @@ for (const activity of C.ACTIVITIES) {
     await page.locator("#listen-button").click();
     await expect
       .poll(() => page.evaluate(() => speechSynthesis.spoken.length))
-      .toBe(texts.length + (withContent ? 2 : 1));
+      .toBe(texts.length + 1 + content.length);
   });
 }
 
@@ -527,11 +547,14 @@ test("numbers are spoken as words, and the number to find never", async ({
 test("adults can switch all speech off and on again", async ({ page }) => {
   await load(page);
   await page.locator("#parents-button").click();
+  await page.locator("#tab-speech").click();
   await expect(page.locator("#speech-on")).toBeChecked();
   await page.locator("#speech-on").uncheck();
   await expect(page.locator("#voice-select")).toBeDisabled();
+  await expect(page.locator("#voice-en-select")).toBeDisabled();
   // The sound test stays silent too.
-  await page.locator('[data-laut="M"]').click({ force: true });
+  await page.locator(".settings-more summary").click();
+  await page.locator('[data-laut="M"]').click();
   await page.locator("#close-settings").click();
   await openGame(page, "type");
   // Neither the voice nor the recorded sounds play; the reading aid shows.
@@ -553,6 +576,7 @@ test("adults can switch all speech off and on again", async ({ page }) => {
   // Switched on again (also after a reload), Momo reads the next task.
   await page.reload();
   await page.locator("#parents-button").click();
+  await page.locator("#tab-speech").click();
   await expect(page.locator("#speech-on")).not.toBeChecked();
   await page.locator("#speech-on").check();
   await page.locator("#close-settings").click();
@@ -562,4 +586,150 @@ test("adults can switch all speech off and on again", async ({ page }) => {
   await expect
     .poll(() => page.evaluate(() => speechSynthesis.spoken.length))
     .toBeGreaterThan(0);
+});
+
+test("English: the word goes to the English voice, help names wrong picks in English", async ({
+  page,
+}) => {
+  await load(page, { levels: { enwords: 0 } });
+  await openGame(page, "enwords");
+  const q = await page.evaluate(() => window.WieseDebug.question);
+  await expect
+    .poll(() => page.evaluate(() => speechSynthesis.english))
+    .toEqual([q.answer]);
+  const wrong = q.choices.filter((x) => x !== q.answer);
+  await page.locator(`#task-area [data-answer="${wrong[0]}"]`).click();
+  await expect(page.locator("#feedback")).toContainText(`„${wrong[0]}“`);
+  await expect
+    .poll(() => page.evaluate(() => speechSynthesis.english))
+    .toContain(wrong[0]);
+  await expect(page.locator(".choice-caption").first()).toBeHidden();
+  // Second mistake: the written words appear and every card is named.
+  await page.locator(`#task-area [data-answer="${wrong[1]}"]`).click();
+  await expect(page.locator(".english-choices")).toHaveClass(/labeled/);
+  await page.locator(`#task-area [data-answer="${q.answer}"]`).click();
+  await expect(page.locator("#feedback")).toContainText(`${q.answer} = ${q.de}`);
+  await expect(page.locator("#total-stars")).toHaveText("0");
+});
+
+test("English: 'Was fehlt?' lights up every said word as help", async ({ page }) => {
+  await load(page, { levels: { enmissing: 0 } });
+  await openGame(page, "enmissing");
+  const q = await page.evaluate(() => window.WieseDebug.question);
+  await expect
+    .poll(() => page.evaluate(() => speechSynthesis.english))
+    .toEqual(q.said);
+  await page.locator(`#task-area [data-answer="${q.said[0]}"]`).click();
+  await expect(page.locator("#feedback")).toContainText("hat Momo gesagt");
+  await page.locator(`#task-area [data-answer="${q.said[1]}"]`).click();
+  await expect(page.locator("#feedback")).toContainText("leuchtet");
+});
+
+test("English without an English voice: a reading aid for adults instead", async ({ page }) => {
+  await load(page);
+  await page.evaluate(() => {
+    speechSynthesis.getVoices = () => [
+      { name: "Test Deutsch", lang: "de-DE", voiceURI: "test", localService: true },
+    ];
+    speechSynthesis.dispatchEvent(new Event("voiceschanged"));
+  });
+  await openGame(page, "ennumbers");
+  await expect(page.locator("#speech-notice")).toContainText("englische Stimme");
+  await expect(page.locator("#adult-cue")).toBeVisible();
+  const q = await page.evaluate(() => window.WieseDebug.question);
+  await expect(page.locator("#cue-text")).toContainText(C.EN_NUMBERS[Number(q.answer)]);
+  // The German instruction is still read, the English word never by the German voice.
+  await page.waitForTimeout(300);
+  expect(await page.evaluate(() => speechSynthesis.english)).toEqual([]);
+});
+
+test("drag food to Momo: he eats it; dropped elsewhere nothing happens", async ({ page }) => {
+  await load(page, { food: { strawberry: 2 }, totalStars: 30, pet: { full: 30, joy: 30, updatedAt: 0 } });
+  await garden(page);
+  const drag = async (to) => {
+    const food = await page.locator('[data-food="strawberry"]').boundingBox();
+    await page.mouse.move(food.x + food.width / 2, food.y + food.height / 2);
+    await page.mouse.down();
+    await page.mouse.move(food.x + 30, food.y - 30, { steps: 4 });
+    await page.mouse.move(to.x, to.y, { steps: 8 });
+    await page.mouse.up();
+  };
+  await drag({ x: 5, y: 5 });
+  await expect(page.locator("#garden-status-text")).toContainText("Zieh das Futter");
+  expect((await stored(page)).food.strawberry).toBe(2);
+  const momo = await page.locator("#garden-momo").boundingBox();
+  await drag({ x: momo.x + momo.width / 2, y: momo.y + momo.height / 2 });
+  await expect(page.locator("#garden-status-text")).toContainText("Mampf");
+  await expect(page.locator('[data-food="strawberry"]')).toContainText("1");
+  expect((await stored(page)).food.strawberry).toBe(1);
+});
+
+test("Momo's wish: the wished food makes him extra happy", async ({ page }) => {
+  await page.clock.install({ time: 5 * C.WISH_WINDOW + 1000 });
+  await load(page, { food: { carrot: 1 }, totalStars: 0, pet: { full: 40, joy: 40, updatedAt: 0 } });
+  await garden(page);
+  // With only carrots unlocked, Momo wishes for a carrot.
+  await expect(page.locator("#momo-wish")).toBeVisible();
+  await expect(page.locator("#momo-wish")).toHaveText("🥕");
+  await page.locator('[data-food="carrot"]').click();
+  await expect(page.locator("#garden-status-text")).toContainText("gewünscht");
+  await expect(page.locator("#momo-wish")).toBeHidden();
+  const state = await stored(page);
+  expect(Math.round(state.pet.joy)).toBe(40 + C.CROPS[0].joy + 15);
+});
+
+test("treasure chest: buying needs two taps; Momo wears it; the ball cheers him up", async ({
+  page,
+}) => {
+  await load(page, { stars: 40, totalStars: 40, pet: { full: 50, joy: 40, updatedAt: 0 } });
+  await garden(page);
+  await page.locator('[data-item="cap"]').click();
+  await expect(page.locator("#garden-status-text")).toContainText("noch einmal");
+  await expect(page.locator("#total-stars")).toHaveText("40");
+  await page.locator('[data-item="cap"]').click();
+  await expect(page.locator("#total-stars")).toHaveText("10");
+  await expect(page.locator('[data-item="cap"]')).toHaveAttribute("aria-pressed", "true");
+  await expect(page.locator("#garden-momo-art .wear-head")).toHaveText("🧢");
+  // Momo wears it on the home screen too.
+  await page.locator(".brand").click();
+  await expect(page.locator("#home-momo .wear-head")).toHaveText("🧢");
+  await garden(page);
+  await page.locator('[data-item="cap"]').click();
+  await expect(page.locator("#garden-momo-art .wear-head")).toHaveCount(0);
+  // Too expensive: nothing is bought.
+  await page.locator('[data-item="crown"]').click();
+  await expect(page.locator("#garden-status-text")).toContainText("brauchst du");
+  await page.evaluate(() => {
+    const raw = JSON.parse(localStorage.getItem("woerterwiese.v1"));
+    raw.wardrobe.owned.push("ball");
+    localStorage.setItem("woerterwiese.v1", JSON.stringify(raw));
+  });
+  await page.reload();
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await garden(page);
+  await page.locator("#garden-ball").click();
+  await expect(page.locator("#garden-status-text")).toContainText("Ball");
+  await expect.poll(async () => Math.round((await stored(page)).pet.joy)).toBe(46);
+});
+
+test("adult area: tabs switch with click and arrow keys", async ({ page }) => {
+  await load(page);
+  await page.locator("#parents-button").click();
+  await expect(page.locator("#panel-overview")).toBeVisible();
+  await page.locator("#tab-overview").focus();
+  await page.keyboard.press("ArrowRight");
+  await expect(page.locator("#tab-levels")).toBeFocused();
+  await expect(page.locator("#panel-levels")).toBeVisible();
+  await expect(page.locator("#panel-overview")).toBeHidden();
+  await expect(page.locator(".level-subject")).toHaveCount(C.SUBJECTS.length);
+  // Subjects start collapsed, so the list stays short.
+  await expect(page.locator('[data-level-for="type"]')).toBeHidden();
+  await page.keyboard.press("End");
+  await expect(page.locator("#panel-data")).toBeVisible();
+  await page.locator("#tab-speech").click();
+  await expect(page.locator("#voice-en-select option")).toHaveCount(2);
+  await page.locator("#test-voice-en").click();
+  await expect
+    .poll(() => page.evaluate(() => speechSynthesis.english.length))
+    .toBe(1);
 });

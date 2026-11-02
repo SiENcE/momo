@@ -1,10 +1,10 @@
 # Wörterwiese 🌱
 
-Ein freundliches Lernspiel für Deutsch und Mathe in der 2. Klasse (ab etwa 7 Jahren). Momo, der kleine Hase, begleitet kurze Übungen, die sich automatisch an das Kind anpassen. Mit den gesammelten Sternen pflanzt das Kind im Garten Futter für Momo – ohne Zeitdruck, Minuspunkte oder Werbung.
+Ein freundliches Lernspiel für Deutsch, Mathe und Englisch in der 1. und 2. Klasse (ab etwa 7 Jahren). Momo, der kleine Hase, begleitet kurze Übungen, die sich automatisch an das Kind anpassen. Mit den gesammelten Sternen pflanzt das Kind im Garten Futter für Momo – ohne Zeitdruck, Minuspunkte oder Werbung.
 
 ## Starten
 
-**`index.html` im Browser öffnen.** Es gibt keinen Build-Schritt, kein Backend, keine Laufzeit-Abhängigkeiten und keine Anmeldung. Die Dateien `index.html`, `styles.css`, `garden.css`, `core.js`, `garden.js`, `math.js`, `deutsch.js`, `report.js`, `app.js` und der Ordner `audio/` müssen zusammen bleiben.
+**`index.html` im Browser öffnen.** Es gibt keinen Build-Schritt, kein Backend, keine Laufzeit-Abhängigkeiten und keine Anmeldung. Die Dateien `index.html`, `styles.css`, `garden.css`, `core.js`, `garden.js`, `math.js`, `deutsch.js`, `english.js`, `report.js`, `app.js` und der Ordner `audio/` müssen zusammen bleiben.
 
 Am PC funktionieren Maus und Tastatur, am Handy Touch und die eingeblendeten Buchstabentasten. Für ein Handy die Dateien am besten auf einem statischen Webhost bereitstellen und dessen Adresse im Browser öffnen; mobile Dateibetrachter führen JavaScript nicht immer aus. Die Seite kann beispielsweise unverändert über GitHub Pages veröffentlicht werden.
 
@@ -16,8 +16,8 @@ Am PC funktionieren Maus und Tastatur, am Handy Touch und die eingeblendeten Buc
 
 Das Kind muss nichts einstellen. Auf der Startseite gibt es einen großen **Spielen**-Knopf, der das am längsten nicht gespielte Spiel startet. Darunter wählt das Kind in drei Schritten selbst:
 
-1. **Fach:** Deutsch oder Mathe
-2. **Bereich:** bei Deutsch *Laute üben*, *ABC üben*, *Richtig schreiben* und *Zu zweit*; bei Mathe *Mengen*, *Zehner und Einer*, *Zahlen finden*, *Vergleichen*, *Rechnen*, *Einmaleins*, *Geld und Uhr* und *Diagramme*
+1. **Fach:** Deutsch, Mathe oder Englisch
+2. **Bereich:** bei Deutsch *Laute üben*, *ABC üben*, *Richtig schreiben* und *Zu zweit*; bei Mathe *Mengen*, *Zehner und Einer*, *Zahlen finden*, *Vergleichen*, *Rechnen*, *Einmaleins*, *Geld und Uhr* und *Diagramme*; bei Englisch *Hören und zeigen*, *Farben und Zahlen* und *Zu zweit*
 3. **Spiel** aus diesem Bereich
 
 Das ✕ im Spiel und „Anderes Spiel“ führen zurück zum Bereich, „← Zurück“ eine Stufe höher.
@@ -116,6 +116,24 @@ Die Spiele mit 👥 spielt ihr gemeinsam: Ein Erwachsener entscheidet mit „Hat
 
 Buchstaben werden als **Laute** ausgegeben („mmm“), nie als Buchstabennamen („Emm“) – so wie in der Grundschule mit der Anlauttabelle. Im Anlautspiel wird das **ganze Wort** gesprochen und nach dem Lösen der Anfangslaut vorgespielt; nach zwei Fehlern spielt Momo die Laute der übrigen Karten zum Vergleichen vor. Die Wortauswahl vermeidet Anfänge wie „Sch“, „Sp“, „St“ und „Ei“. Beim Laute-Zauber leuchtet zu jedem Laut ein Punkt auf; nach zwei Fehlern spielt Momo die Laute ohne Pausen, sodass sie zum Wort verschmelzen. Bei den ABC-Spielen sagt die Stimme keine Buchstaben, sondern nur „Welcher Buchstabe kommt danach?“. Bei „Wer fehlt?“ hört das Kind den Laut jedes gewählten Buchstabens. Nach einem Fehler sagt Momo bei den ABC-Spielen klar, dass der gewählte Buchstabe nicht passt und ein anderer richtig ist („R passt nicht. Ein anderer Buchstabe gehört in die Lücke …“).
 
+## Englisch: die sieben Spiele
+
+Englisch ist in Klasse 1 und 2 vor allem ein Hör-Fach: Kinder hören Wörter, zeigen auf Bilder und machen mit, lesen und schreiben aber noch kaum. Genau so arbeitet das Spiel – angelehnt an Seiten aus dem Englischbuch (Schulsachen, Spielzeug, Farben, Zahlen, Muster-Reihen, „Colour and say“). Die Anweisungen spricht Momo auf Deutsch, die englischen Wörter eine **englische Stimme**. Die Bilder sind Emojis, Farben und Formen werden gezeichnet; das Kind muss nichts Englisches lesen.
+
+| Spiel | Was das Kind tut | Stufen (Auszug) |
+| --- | --- | --- |
+| 🎧 Hör und zeig | hört ein Wort („cat“) und tippt das Bild an | Tiere → Spielzeug und Schulsachen → Essen → Körper und Kleidung → Familie und draußen → alles gemischt (6 Bilder) → ähnlich klingende Wörter (cat – hat – cap, mouse – mouth – house) |
+| 🙈 Was fehlt? | Momo nennt alle Bilder bis auf eins – welches fehlt? | 3 → 6 Bilder, zuletzt mit ähnlich klingenden Wörtern |
+| 🔁 Muster-Reihe | Momo spricht eine Bilderreihe (plane, car, plane, car …) – was kommt als Nächstes? | AB → AAB/ABB → ABC → AABB/ABAC → lange Muster (ABCD) |
+| 🎨 Farben und Formen | hört „red“, „a circle“, „a green triangle“ oder „three blue stars“ und tippt die passende Karte an | 4 → 10 Farben, Formen, Farbe + Form, Zahl + Farbe + Form bis 10 |
+| 🔢 Zahlen auf Englisch | hört „seven“ und tippt die Zahl an | 1–5 als Würfelbild, 1–10, Dinge zählen, bis 12, 11–20, „three oder thirteen?“ |
+| 🙋 Mach mit! 👥 | Momo sagt „Clap your hands! – Touch your nose!“, das Kind macht es nach | 1 → 4 Befehle, eigene Stufen nur mit „Touch your …!“ |
+| 🗣️ Sag es auf Englisch 👥 | sieht ein Bild und sagt das englische Wort; ein Erwachsener entscheidet | 1 Bild pro Thema, dann 2 und 3 Bilder |
+
+- **Hilfe in Stufen wie in den anderen Fächern:** Ein falsch angetipptes Bild wird auf Englisch benannt („Das ist hat – Hut“). Ab dem zweiten Fehler nennt Momo alle übrigen Karten nacheinander, sie leuchten dabei auf, und die englischen Wörter erscheinen klein unter den Bildern. Bei „Was fehlt?“ leuchten dann alle genannten Bilder – das fehlende bleibt dunkel. Bei der Muster-Reihe werden die sich wiederholenden Teile markiert.
+- Nach dem Lösen sagt Momo die Übersetzung („cat heißt Katze“).
+- **Ohne englische Stimme** erscheint ein Hinweis und ein zugeklappter Vorlesetext mit dem englischen Wort für Erwachsene. Englische Stimmen sind auf den meisten Geräten vorhanden oder lassen sich in den Spracheinstellungen des Systems nachinstallieren.
+
 ## Laute (Tondateien)
 
 Browser-Stimmen können keine einzelnen Laute sprechen: Aus „mmm“ wird „Emm Emm Emm“, aus „b“ wird „Be“. Deshalb liegen die Laute als Tondateien in `audio/laute/` (`a.wav` … `z.wav`).
@@ -132,15 +150,26 @@ Browser-Stimmen können keine einzelnen Laute sprechen: Aus „mmm“ wird „Em
 Momo ist ein kleines Haustier, um das sich das Kind kümmert:
 
 - Momo hat zwei Anzeigen: **Satt** und **Fröhlich**. Beide sinken langsam mit der echten Zeit (vollständig erst nach ein bis zwei Tagen). Momo wird nie krank und läuft nie weg.
-- Mit Sternen kauft das Kind **Samen** (Möhre 1 ⭐, Salat 2 ⭐, Erdbeere 3 ⭐, Kürbis 4 ⭐, Apfel 5 ⭐) und pflanzt sie in ein Beet.
-- Ein Beet muss **zweimal gegossen** werden und wächst dazwischen in echter Zeit (eine Möhre braucht 1 Minute, ein Kürbis 5 Minuten). Danach wird **geerntet** und Momo gefüttert. Ohne Wasser wächst nichts, aber es verwelkt auch nichts.
-- Streicheln macht Momo ein bisschen fröhlicher; eine geschaffte Runde freut ihn mehr.
+- Mit Sternen kauft das Kind **Samen** (Möhre 3 ⭐, Salat 4 ⭐, Erdbeere 6 ⭐, Kürbis 8 ⭐, Apfel 10 ⭐) und pflanzt sie in ein Beet.
+- Ein Beet muss **zweimal gegossen** werden und wächst dazwischen in echter Zeit (eine Möhre braucht 4 Minuten, ein Apfel 15 Minuten). Danach wird **geerntet**. Ohne Wasser wächst nichts, aber es verwelkt auch nichts.
+- **Füttern:** Das Kind zieht das Futter mit dem Finger (oder der Maus) zu Momo – oder tippt es an, dann fliegt es zu ihm. Momo macht den Mund auf, hält das Futter und isst es Biss für Biss. Jedes Futter macht nur ein Stück satt, Momo braucht also mehrere Ernten.
+- **Momos Wunsch:** Eine Denkblase zeigt, worauf Momo gerade Lust hat (der Wunsch wechselt alle paar Stunden). Bekommt er genau das, freut er sich besonders.
+- **Streicheln:** Antippen oder mit dem Finger über Momo streichen macht ihn ein bisschen fröhlicher; eine geschaffte Runde freut ihn mehr.
+- **Momos Schatzkiste:** Übrige Sterne kann das Kind für Sachen ausgeben, die Momo anzieht (Blume, Schleife, Schal, Sonnenbrille, Kappe, Zauberhut, Krone; 8–70 ⭐), und für einen **Ball**: Wird er angetippt, rollt er weg und Momo hoppelt hinterher. Kaufen braucht zwei Tipper, damit keine Sterne aus Versehen weg sind. Angezogenes kann jederzeit zurück in die Kiste.
 - Mit insgesamt gesammelten Sternen werden neue Samen, bis zu sechs Beete und Gartenschätze (Schmetterling, Sonnenblume, Häuschen, Regenbogen …) freigeschaltet.
+- **Warum es nicht zu leicht ist:** In 5 Minuten schafft ein Kind leicht 15–30 Aufgaben und damit viele Sterne. Deshalb kosten Samen mehr, wachsen in echter Zeit und machen nur wenig satt; die Beete und das Warten sind die Grenze, nicht die Sterne. Was übrig bleibt, landet in der Schatzkiste.
 - Ein Ausrufezeichen am „Garten“-Knopf zeigt, wenn etwas reif ist, Durst hat oder Momo Hunger hat.
 
 ## Für Erwachsene
 
-Über „Für Erwachsene“ unten auf der Seite lassen sich die Sprachausgabe ganz ein- und ausschalten sowie Stimme, Tempo, automatisches Vorlesen und Kleinbuchstaben einstellen. Dort kann auch die Stufe jedes Spiels von Hand gesetzt werden, falls die automatische Stufe nicht passt. Nach etwa fünf Minuten Spielzeit schlägt Momo eine Pause vor.
+„Für Erwachsene“ unten auf der Seite ist in vier Reiter geteilt:
+
+- **Überblick:** Lernstand öffnen und das Wichtigste zum Spiel.
+- **Stufen:** die Stufe jedes Spiels von Hand setzen, falls die automatische Stufe nicht passt. Die Spiele sind nach Fach (aufklappbar) und Bereich gruppiert.
+- **Vorlesen:** Sprachausgabe ganz ein- und ausschalten, deutsche und englische Stimme, Tempo, automatisches Vorlesen, Kleinbuchstaben und die Laute zum Probehören.
+- **Daten:** Datenschutz und „Fortschritt zurücksetzen“.
+
+Nach etwa fünf Minuten Spielzeit schlägt Momo eine Pause vor.
 
 ### Lernstand
 
@@ -149,7 +178,7 @@ Unter „Für Erwachsene → Lernstand ansehen“ gibt es eine laufend aktualisi
 - **Kennzahlen der letzten 7 Tage** mit Vergleich zur Vorwoche: gelöste Aufgaben, Anteil beim ersten Versuch richtig, gespielte Tage, Spielzeit.
 - **Aktivität der letzten 14 Tage** als Säulendiagramm (mit Tabellenansicht).
 - **Stärken** und **„Hier lohnt sich Üben“**, dazu konkrete **Ideen für zu Hause** – etwa bei verwechselten Lauten wie B/P ein Tipp, wie man den Unterschied spürbar macht.
-- **Bereiche** (Laute hören, ABC & Reihenfolge, Merkwörter, Merken & Nachsprechen, Zehner & Einer) und eine **Tabelle aller Spiele** mit erreichter Stufe, Stufenverlauf, Trend und zuletzt gespielt.
+- **Bereiche** (Laute hören, ABC & Reihenfolge, Merkwörter, Merken & Nachsprechen, Zehner & Einer, Englisch …) und eine **Tabelle aller Spiele** mit erreichter Stufe, Stufenverlauf, Trend und zuletzt gespielt.
 - **Laute und ABC-Buchstaben**, die sicher sitzen oder noch geübt werden sollten, sowie wiederholte Verwechslungen.
 - **Zahlendreher** in den Mathe-Spielen (z. B. 74 statt 47), mit einem Tipp für zu Hause, wenn sie öfter vorkommen.
 
@@ -159,7 +188,7 @@ Fortschritt, Stufen, Beete, Lernstand und Einstellungen werden nur lokal im Brow
 
 ## Sprachausgabe
 
-Die App nutzt die vorhandene `speechSynthesis`-API mit einer deutschen Stimme. In **„Für große Menschen“** lassen sich Stimme, Tempo, automatisches Vorlesen und Groß-/Kleinschreibung einstellen. Lokale deutsche Stimmen werden bevorzugt.
+Die App nutzt die vorhandene `speechSynthesis`-API mit einer deutschen Stimme für Momo und – nur für die englischen Wörter – einer englischen Stimme (britisches Englisch wird bevorzugt). Unter **„Für Erwachsene → Vorlesen“** lassen sich beide Stimmen, Tempo, automatisches Vorlesen und Groß-/Kleinschreibung einstellen. Lokale Stimmen werden bevorzugt.
 
 - Bei jeder Aufgabe wird zuerst **die Aufgabenanweisung** vorgelesen. Bei Hörspielen folgt nach einer kurzen Pause der Buchstabe, das Wort oder die Wortkette.
 - Die kleine 🔊-Taste neben der Anweisung wiederholt Anweisung und Inhalt, die große „Anhören“-Taste nur den Inhalt. Tipps nach Fehlern werden ebenfalls vorgelesen. Automatisches Vorlesen ist in den Einstellungen abschaltbar.
@@ -195,7 +224,8 @@ npm run test:browser
 - `app.js`: Spielablauf, Hilfe in Stufen, sequenzielles Vorlesen, Speicherung und Einstellungen
 - `math.js`: Ansichten und Hilfen der Mathe-Spiele (Zehnerstangen, Zahlenstrahl, Hundertertafel, Geld, Uhr, Diagramme)
 - `deutsch.js`: Ansichten und Hilfen der Spiele „Silben klatschen“ und „Wörter verlängern“
-- `garden.js` / `garden.css`: Momos Garten mit Pflanzen, Gießen, Ernten und Füttern
+- `english.js`: Ansichten und Hilfen der Englisch-Spiele (Bildkarten, gezeichnete Farben und Formen, Würfelbilder, Muster-Reihen)
+- `garden.js` / `garden.css`: Momos Garten mit Pflanzen, Gießen, Ernten, Füttern per Ziehen, Wunsch, Ball und Schatzkiste
 - `report.js`: Lernstand-Seite für Eltern
 - `audio/laute/`: die Laute als Tondateien
 - `tools/`: Import der Laute aus KLettres, ZIP-Hilfe für `build-zip.bat`

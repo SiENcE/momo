@@ -9,7 +9,8 @@ cd /d "%~dp0"
 
 set "NOPAUSE=%~1"
 set "FILES=index.html styles.css garden.css core.js garden.js"
-set "FILES=%FILES% math.js deutsch.js report.js app.js"
+set "FILES=%FILES% math.js deutsch.js english.js"
+set "FILES=%FILES% report.js app.js"
 set "STAGE=dist\woerterwiese"
 set "ZIP=dist\woerterwiese.zip"
 

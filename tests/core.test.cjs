@@ -380,13 +380,16 @@ test("Momo gets hungry slowly, never below zero, and food and cuddles help", () 
   state.pet = { full: 20, joy: 20, updatedAt: 1000 };
   assert.equal(C.feedPet(state, "carrot", 1000), "none");
   state.food.carrot = 1;
-  assert.equal(C.feedPet(state, "carrot", 1000), "eaten");
-  assert.equal(state.pet.full, 40);
+  // At 1000 ms Momo wishes for a carrot (the only crop yet): extra joy.
+  assert.equal(C.feedPet(state, "carrot", 1000), "wish");
+  assert.equal(state.pet.full, 20 + C.CROPS[0].full);
+  assert.equal(state.pet.joy, 20 + C.CROPS[0].joy + 15);
   assert.equal(state.food.carrot, undefined);
   state.food.carrot = 2;
   state.pet.full = 99;
   assert.equal(C.feedPet(state, "carrot", 1000), "full");
   assert.equal(state.food.carrot, 2);
+  state.pet.joy = 20;
   for (let i = 0; i < 50; i++) C.cuddlePet(state, 1000);
   assert.equal(state.pet.joy, 60, "cuddling alone only goes so far");
   C.cheerPet(state, 1000, 10);
@@ -397,7 +400,7 @@ test("beds: buy seeds with stars, water twice, harvest food", () => {
   const state = C.defaultState();
   const carrot = C.CROPS[0];
   assert.equal(C.plant(state, 0, "carrot", 0), "stars");
-  state.stars = 2;
+  state.stars = carrot.cost + 1;
   assert.equal(C.plant(state, 0, "salad", 0), "locked");
   assert.equal(C.plant(state, 3, "carrot", 0), "locked");
   assert.equal(C.plant(state, 0, "carrot", 0), "planted");
@@ -423,6 +426,108 @@ test("beds: buy seeds with stars, water twice, harvest food", () => {
   assert.deepEqual(state.plots[0], { crop: null });
 });
 
+test("garden economy: a session of stars buys a few plants, not a full larder", () => {
+  // About 25 stars (a 10-minute session) buy at most 8 carrot plants …
+  assert.ok(Math.floor(25 / C.CROPS[0].cost) <= 8);
+  for (const crop of C.CROPS) {
+    // … and every crop needs real time to grow and fills Momo only a little.
+    assert.ok(crop.grow >= 4 * 60000, crop.id);
+    assert.ok(crop.full * crop.yield <= 60, crop.id);
+  }
+  // Prices rise with the unlock.
+  const costs = C.CROPS.map((x) => x.cost);
+  assert.deepEqual([...costs].sort((a, b) => a - b), costs);
+});
+
+test("Momo wishes for one food at a time; the wish changes over time", () => {
+  const state = C.defaultState();
+  state.totalStars = 1000;
+  state.pet = { full: 20, joy: 20, updatedAt: 0 };
+  const now = 5 * C.WISH_WINDOW + 10;
+  const wish = C.petWish(state, now);
+  assert.ok(C.CROPS.includes(wish));
+  const other = C.CROPS.find((x) => x !== wish);
+  state.food = { [wish.id]: 1, [other.id]: 1 };
+  assert.equal(C.feedPet(state, other.id, now), "eaten");
+  assert.equal(C.feedPet(state, wish.id, now), "wish");
+  assert.equal(C.petWish(state, now), null, "a fulfilled wish waits for the next window");
+  const wishes = new Set();
+  for (let i = 0; i < 20; i++) wishes.add(C.petWish(state, (6 + i) * C.WISH_WINDOW)?.id);
+  assert.ok(wishes.size >= 3);
+});
+
+test("treasure chest: buy with stars, wear one thing per slot, play ball", () => {
+  const state = C.defaultState();
+  state.pet = { full: 50, joy: 50, updatedAt: 1 };
+  assert.equal(C.playPet(state, 1), "no");
+  assert.equal(C.buyItem(state, "cap"), "stars");
+  state.stars = 200;
+  assert.equal(C.buyItem(state, "cap"), "bought");
+  assert.deepEqual(state.wardrobe.worn, ["cap"]);
+  assert.equal(C.buyItem(state, "cap"), "owned");
+  assert.equal(C.buyItem(state, "crown"), "bought");
+  assert.deepEqual(state.wardrobe.worn, ["crown"], "one hat at a time");
+  C.buyItem(state, "scarf");
+  assert.deepEqual(state.wardrobe.worn.sort(), ["crown", "scarf"]);
+  assert.equal(C.wearItem(state, "scarf"), "off");
+  assert.equal(C.wearItem(state, "cap"), "worn");
+  assert.deepEqual(state.wardrobe.worn, ["cap"]);
+  assert.equal(C.buyItem(state, "ball"), "bought");
+  assert.ok(!state.wardrobe.worn.includes("ball"));
+  assert.equal(state.stars, 200 - 30 - 70 - 18 - 15);
+  for (let i = 0; i < 20; i++) C.playPet(state, 1);
+  assert.equal(state.pet.joy, 85, "playing alone only goes so far");
+  const clean = C.sanitizeState(
+    JSON.parse(JSON.stringify({ version: 2, ...state, wardrobe: { owned: ["cap", "crown", "x"], worn: ["cap", "crown", "ball"] } })),
+  );
+  assert.deepEqual(clean.wardrobe, { owned: ["cap", "crown"], worn: ["cap"] });
+});
+
+test("English: pictures fit the words, no German letter names, voices get English parts", () => {
+  const random = seeded(11);
+  const icons = new Set(C.EN_WORDS.map((x) => x.icon));
+  assert.equal(icons.size, C.EN_WORDS.length, "every picture is unambiguous");
+  for (const group of C.EN_SIMILAR)
+    for (const word of group) assert.ok(C.EN_WORDS.some((x) => x.en === word), word);
+  const english = (speech) => [speech].flat().filter((part) => part?.en).map((part) => part.en);
+  for (const mode of C.ENGLISH_GAMES)
+    for (let level = 0; level <= C.maxLevel(mode); level++)
+      for (let i = 0; i < 40; i++) {
+        const q = C.makeQuestion(mode, level, null, random);
+        // German strings never carry the English answer.
+        for (const part of [q.speech].flat().filter((x) => typeof x === "string"))
+          assert.ok(!part.includes(q.answer), `${mode}: ${part}`);
+        if (mode === "enwords") assert.deepEqual(english(q.speech), [q.answer]);
+        if (mode === "enmissing") {
+          assert.equal(english(q.speech).length, q.choices.length - 1);
+          assert.ok(!english(q.speech).includes(q.answer));
+        }
+        if (mode === "enpattern") {
+          assert.equal(english(q.speech).length, q.row.length);
+          assert.equal(q.answer, q.row[q.row.length - q.period]);
+        }
+        if (mode === "ennumbers") assert.deepEqual(english(q.speech), [C.EN_NUMBERS[Number(q.answer)]]);
+        if (mode === "encolors") {
+          const answer = q.items.find((x) => x.value === q.answer);
+          assert.deepEqual(english(q.speech), [answer.en]);
+          // Every card has its own English name.
+          assert.equal(new Set(q.items.map((x) => x.en)).size, q.items.length);
+        }
+        if (mode === "ensay") assert.equal(q.speech, null, "the child says it, Momo does not");
+        if (q.explain) assert.ok(english(q.explain.speech).length >= 1);
+      }
+  const level = C.LEVELS.ennumbers.findIndex((x) => x.similar);
+  let teens = 0;
+  for (let i = 0; i < 100; i++) {
+    const q = C.makeQuestion("ennumbers", level, null, random);
+    const n = Number(q.answer);
+    if (q.choices.includes(String(n + 10)) || q.choices.includes(String(n - 10))) teens++;
+  }
+  assert.ok(teens > 50, "three and thirteen are offered together");
+  const colours = C.makeQuestion("encolors", C.LEVELS.encolors.findIndex((x) => x.ask === "count"), null, seeded(3));
+  assert.match(colours.items[0].de, /^(ein|zwei|drei|vier|fünf) /);
+});
+
 test("unlocks, beds and the recommended game follow progress", () => {
   assert.equal(C.bedCount(0), 3);
   assert.equal(C.bedCount(10), 4);
@@ -433,7 +538,8 @@ test("unlocks, beds and the recommended game follow progress", () => {
   );
   assert.equal(C.availableCrops(1000).length, C.CROPS.length);
   assert.deepEqual(C.newlyUnlocked(0, 5), []);
-  assert.ok(C.newlyUnlocked(5, 6).some((x) => x.name === "Salat-Samen"));
+  const salad = C.CROPS.find((x) => x.id === "salad").unlock;
+  assert.ok(C.newlyUnlocked(salad - 1, salad).some((x) => x.name === "Salat-Samen"));
   assert.equal(C.nextUnlock(0).at, C.UNLOCKS[0].at);
   assert.equal(C.nextUnlock(100000), null);
   const state = C.defaultState();

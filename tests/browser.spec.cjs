@@ -15,6 +15,19 @@ async function openGame(page, id) {
   await page.locator(`.activity-card[data-activity="${id}"]`).click();
 }
 
+// The adult area has tabs; the level list is grouped by subject.
+async function adultTab(page, tab) {
+  await page.locator(`#tab-${tab}`).click();
+}
+async function levelSelect(page, mode) {
+  await adultTab(page, "levels");
+  const subject = C.categoryOf(mode).subject;
+  const group = page.locator(`[data-subject-levels="${subject}"]`);
+  if (!(await group.evaluate((element) => element.open)))
+    await group.locator("summary").click();
+  return page.locator(`[data-level-for="${mode}"]`);
+}
+const together = (mode) => Boolean(C.ACTIVITIES.find((x) => x.id === mode)?.together);
 // Speech without voices: the app must stay playable with an adult reading aloud.
 async function installSpeechMock(page) {
   await page.addInitScript(() => {
@@ -48,8 +61,7 @@ async function solve(page) {
     for (const value of q.order) await task(page, value).click();
   else if (q.mode === "missing")
     for (const letter of q.answers) await task(page, letter).click();
-  else if (["memory", "echo", "movement"].includes(q.mode))
-    await page.locator("#echo-done").click();
+  else if (together(q.mode)) await page.locator("#echo-done").click();
   else if (q.mode === "build") {
     await lay(page, q.target.tens - q.start.tens, q.target.ones - q.start.ones);
     await page.locator("#build-done").click();
@@ -66,8 +78,7 @@ async function lay(page, tens, ones) {
 }
 async function wrong(page) {
   const q = await question(page);
-  if (["memory", "echo", "movement"].includes(q.mode))
-    return page.locator("#echo-retry").click();
+  if (together(q.mode)) return page.locator("#echo-retry").click();
   // The start never equals the target, so checking right away is wrong.
   if (q.mode === "build") return page.locator("#build-done").click();
   const options =
@@ -137,9 +148,12 @@ for (const activity of C.ACTIVITIES) {
 }
 
 test("nothing gives the solution away by default", async ({ page }) => {
+  // Opens every game with choices through the menu.
+  test.setTimeout(60000);
   await page.evaluate(() => {
     window.speechSynthesis.voices = [
       { name: "Deutsch", lang: "de-DE", voiceURI: "de", localService: true },
+      { name: "English", lang: "en-GB", voiceURI: "en", localService: true },
     ];
     window.SpeechSynthesisUtterance = class {
       constructor(text) {
@@ -148,7 +162,8 @@ test("nothing gives the solution away by default", async ({ page }) => {
     };
     speechSynthesis.dispatchEvent(new Event("voiceschanged"));
   });
-  for (const mode of ["type", "initial", "blend", "missing", "neighbor", "order", ...C.MATH_GAMES]) {
+  const english = C.ENGLISH_GAMES.filter((mode) => !together(mode));
+  for (const mode of ["type", "initial", "blend", "missing", "neighbor", "order", ...C.MATH_GAMES, ...english]) {
     await page.locator(".brand").click();
     await openGame(page, mode);
     await expect(page.locator("#adult-cue")).toBeHidden();
@@ -177,6 +192,11 @@ test("nothing gives the solution away by default", async ({ page }) => {
       if (mode === "line") await expect(page.locator(".help-label").first()).toBeHidden();
       if (mode === "steps") await expect(page.locator(".step-arrow").first()).toBeHidden();
       if (mode === "graph") await expect(page.locator(".bar-value").first()).toBeHidden();
+    }
+    // English: the written words under the pictures appear only as help.
+    if (english.includes(mode)) {
+      await expect(page.locator(".choice-caption").first()).toBeHidden();
+      if (mode === "enpattern") await expect(page.locator("[data-reveal]")).toHaveText("?");
     }
     if (mode === "blend") {
       // Only dots show the sounds; picture captions stay hidden.
@@ -268,7 +288,8 @@ test("adults can override levels, show lowercase and reset everything", async ({
   page,
 }) => {
   await page.locator("#parents-button").click();
-  await page.locator('[data-level-for="order"]').selectOption("6");
+  await (await levelSelect(page, "order")).selectOption("6");
+  await adultTab(page, "speech");
   await page.locator("#lowercase").check();
   await page.locator("#speech-rate").selectOption("0.65");
   await page.locator("#auto-speak").uncheck();
@@ -282,10 +303,15 @@ test("adults can override levels, show lowercase and reset everything", async ({
   await expect(page.locator("#total-stars")).toHaveText("1");
   await page.reload();
   await page.locator("#parents-button").click();
+  // The dialog always opens on the overview.
+  await expect(page.locator("#panel-overview")).toBeVisible();
+  await expect(page.locator("#panel-speech")).toBeHidden();
+  await adultTab(page, "speech");
   await expect(page.locator("#lowercase")).toBeChecked();
   await expect(page.locator("#speech-rate")).toHaveValue("0.65");
   await expect(page.locator("#auto-speak")).not.toBeChecked();
-  await expect(page.locator('[data-level-for="order"]')).toHaveValue("7");
+  await expect(await levelSelect(page, "order")).toHaveValue("7");
+  await adultTab(page, "data");
   await page.locator("#reset-progress").click();
   await page.locator("#cancel-reset").click();
   await expect(page.locator("#total-stars")).toHaveText("1");
@@ -328,6 +354,7 @@ test("parents see a continuous report of progress, strengths and weaknesses", as
   // Kids never land here by accident: no nav entry, and reset clears it.
   await expect(page.locator('.nav-button[data-view="report"]')).toHaveCount(0);
   await page.locator("#parents-button").click();
+  await adultTab(page, "data");
   await page.locator("#reset-progress").click();
   await page.locator("#confirm-reset").click();
   await page.locator("#parents-button").click();
@@ -414,10 +441,12 @@ test("multiple tabs keep all earned stars and a reset wins", async ({
   await expect(second.locator("#total-stars")).toHaveText("2");
   await page.locator("#leave-game").click();
   await page.locator("#parents-button").click();
+  await adultTab(page, "data");
   await page.locator("#reset-progress").click();
   await page.locator("#confirm-reset").click();
   await second.locator("#leave-game").click();
   await second.locator("#parents-button").click();
+  await adultTab(second, "speech");
   await second.locator("#lowercase").check();
   await expect(second.locator("#total-stars")).toHaveText("0");
   await page.reload();
@@ -488,6 +517,13 @@ test("home, garden and every game fit the viewport without horizontal scrolling"
           clock: 6,
           syllables: 5,
           extend: 5,
+          enwords: 6,
+          enmissing: 5,
+          enpattern: 6,
+          encolors: 8,
+          ennumbers: 3,
+          ensimon: 6,
+          ensay: 5,
         },
       }),
     ),
