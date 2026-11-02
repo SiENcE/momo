@@ -107,9 +107,21 @@ async function nextTask(page, previous) {
     .toBe(true);
 }
 
+// A fresh start asks for the grade first; grade 2 has every game.
+async function chooseGrade(page, grade = 2) {
+  await page.locator(`[data-grade="${grade}"]`).click();
+  await expect(page.locator("[data-subject]").first()).toBeVisible();
+}
+// Most tests start like a save from before the grade choice: grade 2 with
+// every game, all levels at the first one.
 test.beforeEach(async ({ page }) => {
   await installSpeechMock(page);
   await page.goto(appUrl);
+  await page.evaluate(() =>
+    localStorage.setItem("woerterwiese.v1", JSON.stringify({ version: 2 })),
+  );
+  await page.reload();
+  await expect(page.locator("[data-subject]").first()).toBeVisible();
 });
 
 for (const activity of C.ACTIVITIES) {
@@ -399,6 +411,7 @@ test("blocked and malformed storage do not prevent playing", async ({
   );
   await page.reload();
   await expect(page.locator("#total-stars")).toHaveText("0");
+  await chooseGrade(page);
   await page.evaluate(() => {
     Storage.prototype.setItem = () => {
       throw new DOMException("blocked", "SecurityError");
@@ -552,6 +565,75 @@ test("home, garden and every game fit the viewport without horizontal scrolling"
     path: `test-results/garden-${testInfo.project.name}.png`,
     fullPage: true,
   });
+});
+
+test("first start asks for the grade; it sets the entry point and the games shown", async ({
+  page,
+}) => {
+  await page.evaluate(() => localStorage.clear());
+  await page.reload();
+  await expect(page.locator("#home-grid-title")).toHaveText("In welche Klasse gehst du?");
+  await expect(page.locator("#home-momo-says")).toContainText("In welche Klasse");
+  await expect(page.locator("#start-button")).toBeHidden();
+  await expect(page.locator("#grade-note")).toBeVisible();
+  await expect(page.locator("[data-subject]")).toHaveCount(0);
+  // Only grades with games are offered to the child.
+  await expect(page.locator("[data-grade]")).toHaveCount(C.availableGrades().length);
+  await chooseGrade(page, 1);
+  await expect(page.locator("#home-grid-title")).toContainText("1. Klasse");
+  await expect(page.locator("#start-button")).toBeVisible();
+  await expect(page.locator("#grade-note")).toBeHidden();
+  await page.locator('[data-subject="mathe"]').click();
+  await expect(page.locator("[data-category]")).toHaveCount(C.categoriesFor("mathe", 1).length);
+  await expect(page.locator('[data-category="times"]')).toHaveCount(0);
+  await page.locator('[data-category="tens"]').click();
+  await expect(page.locator("#menu-grid .activity-card")).toHaveCount(2);
+  await expect(page.locator('.activity-card[data-activity="place"]')).toHaveCount(0);
+  await expect(page.locator('.activity-card[data-activity="bundle"]')).toContainText("Stufe 1");
+  // Adults see the grade, can't pick one without games, and see every level
+  // with its grade: the child may climb beyond its own grade.
+  await page.locator("#parents-button").click();
+  await expect(page.locator("#grade-select")).toHaveValue("1");
+  await expect(page.locator('#grade-select option[value="3"]')).toHaveAttribute("disabled", "");
+  const bundle = await levelSelect(page, "bundle");
+  await expect(bundle.locator("option")).toHaveCount(C.maxLevel("bundle") + 1);
+  await expect(bundle.locator("option").last()).toContainText("(Kl. 2)");
+  await expect(page.locator('[data-level-for="times"]')).toHaveCount(0);
+  await adultTab(page, "overview");
+  await page.locator("#grade-select").selectOption("2");
+  await expect(page.locator("#grade-status")).toContainText("2. Klasse");
+  await page.locator("#close-settings").click();
+  // The open category now lists the games of grade 2, starting at its levels.
+  await expect(page.locator("#menu-grid .activity-card")).toHaveCount(3);
+  await expect(page.locator('.activity-card[data-activity="bundle"]')).toContainText(
+    `Stufe ${C.gradeStart("bundle", 2) + 1}`,
+  );
+  await page.reload();
+  await expect(page.locator("#home-grid-title")).toContainText("2. Klasse");
+});
+
+test("a first grader climbs past grade 1 and opens the games of grade 2", async ({
+  page,
+}) => {
+  await page.evaluate(() => localStorage.clear());
+  await page.reload();
+  await chooseGrade(page, 1);
+  await openGame(page, "bundle");
+  for (let i = 0; i < 3; i++) {
+    const q = await solve(page);
+    await expect(page.locator("#total-stars")).toHaveText(String(i + 1));
+    if (i < 2) await nextTask(page, q);
+  }
+  await expect(page.locator("#result-view")).toBeVisible();
+  // No cap: the game went on into the levels of grade 2.
+  await expect(page.locator("#result-description")).toContainText("Stufe 4");
+  await expect(page.locator("#unlocked-rewards")).toContainText("Zahlenhaus");
+  await page.locator("#other-game").click();
+  await expect(page.locator("#menu-title")).toHaveText("Zehner und Einer");
+  await expect(page.locator('.activity-card[data-activity="place"]')).toBeVisible();
+  // The child's grade stays the same.
+  await page.locator(".brand").click();
+  await expect(page.locator("#home-grid-title")).toContainText("1. Klasse");
 });
 
 test("menu: subject, then category, then game – and back the same way", async ({

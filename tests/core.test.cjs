@@ -993,3 +993,168 @@ test("shuffle preserves its input", () => {
   assert.notEqual(input, result);
   assert.deepEqual(result.sort(), input);
 });
+
+
+test("grades: every game names the first level of each of its grades", () => {
+  const ids = C.GRADES.map((x) => x.id);
+  for (const activity of C.ACTIVITIES) {
+    const steps = Object.entries(activity.grades).map(([g, from]) => [Number(g), from]);
+    assert.ok(steps.length, `${activity.id} has no grade`);
+    steps.sort((a, b) => a[0] - b[0]);
+    // The lowest grade starts at the first level; later grades start later.
+    assert.equal(steps[0][1], 0, activity.id);
+    for (let i = 0; i < steps.length; i++) {
+      assert.ok(ids.includes(steps[i][0]), `${activity.id}: unknown grade ${steps[i][0]}`);
+      assert.ok(steps[i][1] <= C.maxLevel(activity.id), activity.id);
+      if (i) assert.ok(steps[i][1] > steps[i - 1][1], activity.id);
+    }
+    // Level grades never go down with harder levels.
+    for (let level = 1; level <= C.maxLevel(activity.id); level++)
+      assert.ok(C.levelGrade(activity.id, level) >= C.levelGrade(activity.id, level - 1), activity.id);
+  }
+  const available = C.availableGrades().map((x) => x.id);
+  assert.deepEqual(available, [1, 2]);
+  // Grade 2 offers every game, grade 1 the ones that start in grade 1.
+  assert.ok(C.ACTIVITIES.every((x) => C.inGrade(x.id, 2)));
+  for (const id of ["merk", "extend", "place", "chart", "calc", "times"])
+    assert.equal(C.inGrade(id, 1), false, id);
+  for (const grade of available) {
+    for (const subject of C.subjectsFor(grade))
+      for (const category of C.categoriesFor(subject.id, grade)) {
+        assert.ok(category.games.length);
+        assert.ok(category.games.every((id) => C.inGrade(id, grade)));
+      }
+    assert.ok(C.ACTIVITIES.some((x) => !x.together && C.inGrade(x.id, grade)));
+  }
+  assert.ok(C.ACTIVITIES.every((x) => C.inGrade(x.id, 0)));
+  assert.equal(C.levelGrade("clock", 0), 1);
+  assert.equal(C.levelGrade("clock", 2), 2);
+  assert.equal(C.levelGrade("times", 0), 2);
+  assert.equal(C.gradeStart("clock", 1), 0);
+  assert.equal(C.gradeStart("clock", 2), 2);
+  // A later grade without own levels starts where the game's last grade starts.
+  assert.equal(C.gradeStart("clock", 3), 2);
+});
+
+test("the grade is only the entry point: progression goes beyond it and below it", () => {
+  // No cap: a first grader climbs into the levels of grade 2 …
+  assert.equal(C.levelGrade("bundle", C.progress("bundle", 0, true).level), 2);
+  assert.equal(C.progress("clock", C.maxLevel("clock"), true).level, C.maxLevel("clock"));
+  // … and a second grader who struggles steps down below the grade's start.
+  const start = C.gradeStart("clock", 2);
+  assert.equal(C.progress("clock", start, false, 1).level, start - 1);
+  assert.equal(C.levelGrade("clock", start - 1), 1);
+
+  const state = C.defaultState();
+  assert.equal(state.settings.grade, 0);
+  state.levels.type = 7;
+  assert.equal(C.setGrade(state, 2), true);
+  assert.equal(state.settings.grade, 2);
+  // Second graders skip the beginner levels, progress above is kept.
+  assert.equal(state.levels.clock, C.gradeStart("clock", 2));
+  assert.equal(state.levels.times, 0);
+  assert.equal(state.levels.type, 7);
+  // Going back to grade 1 never lowers a level.
+  assert.equal(C.setGrade(state, 1), true);
+  assert.equal(state.levels.clock, C.gradeStart("clock", 2));
+  assert.equal(C.setGrade(state, 3), false);
+  assert.equal(C.setGrade(state, "2"), false);
+  assert.equal(state.settings.grade, 1);
+  const first = C.defaultState();
+  C.setGrade(first, 1);
+  assert.ok(C.inGrade(C.recommendedGame(first), 1));
+  first.lastPlayed = Object.fromEntries(C.ACTIVITIES.map((x) => [x.id, 10]));
+  first.lastPlayed.merk = 1;
+  assert.notEqual(C.recommendedGame(first), "merk");
+});
+
+test("games of a higher grade open once a related game has passed the child's grade", () => {
+  const state = C.defaultState();
+  C.setGrade(state, 1);
+  assert.ok(!C.openGames(state).includes("place"));
+  assert.deepEqual(C.unlockedBy(state, "place"), []);
+  // Zahlen-Blick past its grade-1 levels opens the Zahlenhaus in the same category …
+  state.levels.bundle = C.gradeStart("bundle", 2);
+  assert.deepEqual(C.unlockedBy(state, "place"), ["bundle"]);
+  assert.ok(C.isOpen("place", 1, state));
+  assert.ok(C.openGames(state).includes("place"));
+  // … but not the Merkwörter of German.
+  assert.ok(!C.isOpen("merk", 1, state));
+  assert.ok(!C.isOpen("place", 1));
+  // A category without grade-1 games opens through any game of the subject.
+  assert.ok(C.isOpen("times", 1, state));
+  assert.ok(C.categoriesFor("mathe", 1, state).some((x) => x.id === "times"));
+  assert.ok(C.subjectsFor(1, state).length === C.subjectsFor(1).length);
+  // Stepping back down does not close it again: the highest level counts.
+  C.recordTask(state, { mode: "bundle", level: state.levels.bundle, startLevel: 0, firstTry: true, mistakes: 0, ms: 1000 }, 5);
+  state.levels.bundle = 0;
+  assert.ok(C.isOpen("place", 1, state));
+  const saved = C.sanitizeState(JSON.parse(JSON.stringify(state)));
+  assert.equal(saved.reached.bundle, C.gradeStart("bundle", 2));
+  assert.ok(C.isOpen("place", 1, saved));
+  // Older saves take the highest level from the level history.
+  const old = C.sanitizeState({
+    version: 2,
+    settings: { grade: 1 },
+    stats: { games: { syllables: { tasks: 3, ok: 3, levels: [[1, 0], [2, 5], [3, 1]] } } },
+    reached: { syllables: 2, nope: 9, type: "x" },
+  });
+  assert.deepEqual(old.reached, { syllables: 5 });
+  assert.ok(C.isOpen("merk", 1, old));
+  assert.ok(C.isOpen("extend", 1, old));
+});
+
+test("the grade is stored strictly and old saves keep all games of grade 2", () => {
+  assert.equal(C.sanitizeState(null).settings.grade, 0);
+  const old = C.sanitizeState({ version: 2, levels: { clock: 0 } });
+  assert.equal(old.settings.grade, 2);
+  // Old saves keep their levels: the child already has its own progress.
+  assert.equal(old.levels.clock, 0);
+  assert.equal(C.sanitizeState({ version: 1, settings: { rate: 0.8 } }).settings.grade, 2);
+  assert.equal(C.sanitizeState({ version: 2, settings: { grade: 1 } }).settings.grade, 1);
+  assert.equal(C.sanitizeState({ version: 2, settings: { grade: 0 } }).settings.grade, 0);
+  for (const grade of [3, 9, "1", null, 1.5])
+    assert.equal(C.sanitizeState({ version: 2, settings: { grade } }).settings.grade, 0);
+  // A first grader may store levels of grade 2.
+  const ahead = C.sanitizeState({ version: 2, levels: { clock: 6 }, settings: { grade: 1 } });
+  assert.equal(ahead.levels.clock, 6);
+  const stats = C.sanitizeState({
+    version: 2,
+    stats: { grades: { 1: { tasks: 4, ok: 9 }, 2: { tasks: -1 }, 7: { tasks: 3, ok: 1 }, x: 1 } },
+  }).stats.grades;
+  assert.deepEqual(stats, { 1: { tasks: 4, ok: 4 } });
+});
+
+test("statistics count tasks by the grade of their level and the report shows how far the child is", () => {
+  const now = Date.UTC(2026, 3, 10, 12);
+  const state = C.defaultState();
+  C.setGrade(state, 1);
+  const task = (mode, level, firstTry = true) => ({
+    mode,
+    level,
+    startLevel: level,
+    firstTry,
+    mistakes: firstTry ? 0 : 1,
+    ms: 4000,
+  });
+  C.recordTask(state, task("clock", 0), now);
+  C.recordTask(state, task("clock", 1), now);
+  C.recordTask(state, task("clock", 2, false), now);
+  C.recordTask(state, task("times", 0), now);
+  assert.deepEqual(state.stats.grades, { 1: { tasks: 2, ok: 2 }, 2: { tasks: 2, ok: 1 } });
+  state.levels.clock = 3;
+  const report = C.buildReport(state, now);
+  assert.equal(report.grade, "1. Klasse");
+  const ids = report.games.map((x) => x.id);
+  // Games of grade 1, plus a grade-2 game that was played anyway.
+  assert.ok(ids.includes("times"));
+  assert.ok(!ids.includes("calc"));
+  assert.equal(report.games.find((x) => x.id === "clock").grade, 2);
+  assert.equal(report.games.find((x) => x.id === "clock").maxLevel, C.maxLevel("clock"));
+  const second = report.gradeLevels.find((x) => x.id === 2);
+  assert.equal(second.tasks, 2);
+  assert.equal(second.rate, 0.5);
+  assert.ok(second.games.includes("Uhr lesen"));
+  assert.ok(report.strengths.some((x) => x.startsWith("Schon Aufgaben der 2. Klasse") && x.includes("Uhr lesen")));
+  for (const area of report.areas) assert.ok(area.progress >= 0 && area.progress <= 1, area.id);
+});

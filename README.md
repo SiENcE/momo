@@ -1,6 +1,6 @@
 # Wörterwiese 🌱
 
-Ein freundliches Lernspiel für Deutsch, Mathe und Englisch in der 1. und 2. Klasse (ab etwa 7 Jahren). Momo, der kleine Hase, begleitet kurze Übungen, die sich automatisch an das Kind anpassen. Mit den gesammelten Sternen pflanzt das Kind im Garten Futter für Momo – ohne Zeitdruck, Minuspunkte oder Werbung.
+Ein freundliches Lernspiel für Deutsch, Mathe und Englisch in der Grundschule – bisher mit Spielen für die 1. und 2. Klasse (ab etwa 6 Jahren), weitere Klassen folgen. Momo, der kleine Hase, begleitet kurze Übungen, die sich automatisch an das Kind anpassen. Mit den gesammelten Sternen pflanzt das Kind im Garten Futter für Momo – ohne Zeitdruck, Minuspunkte oder Werbung.
 
 ## Starten
 
@@ -14,7 +14,19 @@ Am PC funktionieren Maus und Tastatur, am Handy Touch und die eingeblendeten Buc
 
 ## So funktioniert es
 
-Das Kind muss nichts einstellen. Auf der Startseite gibt es einen großen **Spielen**-Knopf, der das am längsten nicht gespielte Spiel startet. Darunter wählt das Kind in drei Schritten selbst:
+Beim ersten Start fragt Momo einmal: „In welche Klasse gehst du?“ Angeboten werden nur Klassen, für die es schon Spiele gibt. Erwachsene können die Klasse unter „Für Erwachsene → Überblick“ ändern.
+
+**Die Klasse ist nur der Einstieg.** Jede Stufe eines Spiels gehört zu einer Klasse (z. B. „Uhr lesen“: volle und halbe Stunden = 1. Klasse, ab „halb 4“ = 2. Klasse). Ein Kind der 2. Klasse beginnt deshalb gleich bei den Aufgaben der 2. Klasse und muss nicht erst die Anfängeraufgaben lösen. Danach gilt die normale Anpassung: Klappt es, wird es schwerer – auch über die eigene Klasse hinaus –, klappt es nicht, wird es leichter, auch unter den Einstieg. Die Klasse des Kindes ändert sich dabei nicht. Im Lernstand sehen Erwachsene, wie viele Aufgaben aus welcher Klasse gelöst wurden und in welchen Spielen das Kind schon Aufgaben einer höheren Klasse übt.
+
+| Klasse | Was dazugehört |
+| --- | --- |
+| 1. Klasse | die ersten Stufen von: Laute, Anlaute, Laute verbinden, ABC, Silben, Merken; Mengen, Zahlen bis 20, über die 10 rechnen, Geld bis 20 Cent, volle und halbe Stunden, Säulen lesen; Englisch |
+| 2. Klasse | die höheren Stufen davon und zusätzlich Merkwörter, Wörter verlängern, Zahlenhaus, Hundertertafel, Weiterzählen, Vergleichen, Ordnen, Zahlen-Nachbarn, Zehner rechnen und Einmaleins |
+| 3. und 4. Klasse | in Vorbereitung |
+
+Spiele, die erst in einer höheren Klasse beginnen (z. B. Zahlenhaus oder Einmaleins), erscheinen für jüngere Kinder, sobald sie in einem passenden Spiel alle Aufgaben ihrer Klasse geschafft haben – also dort auf den Stufen der höheren Klasse angekommen sind. Passend heißt: ein Spiel aus demselben Bereich (Zahlen-Blick oder Zahlen bauen öffnen das Zahlenhaus, Silben klatschen öffnet Merkwörter und Wörter verlängern). Hat der Bereich kein solches Spiel (Vergleichen, Einmaleins), reicht ein Spiel desselben Fachs. Das Kind sieht dann auf der Ergebnis-Seite „Neu: Spiel …!“. Einmal geöffnete Spiele bleiben offen, auch wenn es später wieder leichter wird.
+
+Sonst muss das Kind nichts einstellen. Auf der Startseite gibt es einen großen **Spielen**-Knopf, der das am längsten nicht gespielte Spiel startet. Darunter wählt das Kind in drei Schritten selbst:
 
 1. **Fach:** Deutsch, Mathe oder Englisch
 2. **Bereich:** bei Deutsch *Laute üben*, *ABC üben*, *Richtig schreiben* und *Zu zweit*; bei Mathe *Mengen*, *Zehner und Einer*, *Zahlen finden*, *Vergleichen*, *Rechnen*, *Einmaleins*, *Geld und Uhr* und *Diagramme*; bei Englisch *Hören und zeigen*, *Farben und Zahlen* und *Zu zweit*
@@ -164,8 +176,8 @@ Momo ist ein kleines Haustier, um das sich das Kind kümmert:
 
 „Für Erwachsene“ unten auf der Seite ist in vier Reiter geteilt:
 
-- **Überblick:** Lernstand öffnen und das Wichtigste zum Spiel.
-- **Stufen:** die Stufe jedes Spiels von Hand setzen, falls die automatische Stufe nicht passt. Die Spiele sind nach Fach (aufklappbar) und Bereich gruppiert.
+- **Überblick:** die Klasse (den Einstieg) wählen, den Lernstand öffnen und das Wichtigste zum Spiel. Klassen ohne Spiele sind ausgegraut. Beim Wechsel rücken Spiele, die noch unter dem Einstieg der neuen Klasse stehen, auf diesen Einstieg vor; höhere Stufen bleiben erhalten.
+- **Stufen:** die Stufe jedes Spiels von Hand setzen, falls die automatische Stufe nicht passt. Hinter jeder Stufe steht ihre Klasse („Kl. 2“). Die Spiele sind nach Fach (aufklappbar) und Bereich gruppiert.
 - **Vorlesen:** Sprachausgabe ganz ein- und ausschalten, deutsche und englische Stimme, Tempo, automatisches Vorlesen, Kleinbuchstaben und die Laute zum Probehören.
 - **Daten:** Datenschutz und „Fortschritt zurücksetzen“.
 
@@ -184,7 +196,7 @@ Unter „Für Erwachsene → Lernstand ansehen“ gibt es eine laufend aktualisi
 
 Gezählt wird pro gelöster Aufgabe; „beim ersten Versuch richtig“ ist der Maßstab für Sicherheit. Die Seite lässt sich drucken, z. B. für ein Gespräch mit der Lehrkraft. Die Auswertung ist eine Beobachtungshilfe, keine Diagnose.
 
-Fortschritt, Stufen, Beete, Lernstand und Einstellungen werden nur lokal im Browser gespeichert. Ein Fortschritt aus der alten Version (nur Sterne) wird übernommen.
+Fortschritt, Stufen, Beete, Lernstand und Einstellungen werden nur lokal im Browser gespeichert. Ein Fortschritt aus der alten Version (nur Sterne) wird übernommen. Spielstände aus der Zeit vor der Klassen-Auswahl werden der 2. Klasse zugeordnet und behalten alle Spiele und Stufen.
 
 ## Sprachausgabe
 
