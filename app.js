@@ -635,6 +635,38 @@
         );
         $("#build-done").addEventListener("click", () => checkBuild($("#build-done")));
       }
+      if (mode === "lay") {
+        // Ten dots in a column are bundled (and unbundled) with a word from Momo.
+        M.renderLaid(task, game.built, false, q.places);
+        $$("#task-area [data-lay]").forEach((button) =>
+          button.addEventListener("click", () => {
+            if (game.answered) return;
+            const step = C.layStep(
+              game.built,
+              Number(button.dataset.lay),
+              Number(button.dataset.step),
+              q.places,
+            );
+            if (!step) return;
+            game.built = step.dots;
+            M.renderLaid(task, game.built, false, q.places);
+            if (!step.events.length) return;
+            const note = M.layNote(step.events);
+            $("#lay-note").textContent = note.text;
+            const column = $(`#lay-dots-${note.column}`);
+            column.classList.remove("bundled");
+            void column.offsetWidth;
+            column.classList.add("bundled");
+            autoSpeak(note.speech);
+          }),
+        );
+        $("#build-done").addEventListener("click", () => {
+          if (!game || game.answered) return;
+          const value = C.layValue(game.built);
+          if (value === game.question.number) solved();
+          else mistake(null, $("#build-done"), String(value));
+        });
+      }
     } else {
       const icon = { memory: "🎒", echo: "🦜", movement: "👏" }[mode];
       task.innerHTML = `<div class="echo-symbol" aria-hidden="true">${icon}</div>${listenButton("Anhören")}<p class="together-note"><span aria-hidden="true">👥</span> Ein Erwachsener hört zu und entscheidet.</p><div class="self-check"><button id="echo-done" class="button primary">✓ Hat geklappt</button><button id="echo-retry" class="button secondary">↺ Noch nicht ganz</button></div><button id="compare-echo" class="text-button" aria-expanded="false">Lösung zeigen</button><div id="echo-answer" hidden>${compareMarkup()}</div>`;

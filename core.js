@@ -97,6 +97,7 @@
     { id: "extend", icon: "🐍", title: "Wörter verlängern", color: "mint", grades: { 2: 0 } },
     { id: "tenfold", icon: "📦", title: "Immer zehn", color: "peach", grades: { 2: 0, 3: 2, 4: 4 } },
     { id: "placetable", icon: "🧱", title: "Stellentafel", color: "sky", grades: { 2: 0, 3: 2, 4: 5 } },
+    { id: "lay", icon: "🔘", title: "Zahlen legen", color: "mint", grades: { 2: 0, 3: 2, 4: 5 } },
     { id: "enwords", icon: "🎧", title: "Hör und zeig", color: "sky", grades: { 1: 0, 2: 5 } },
     { id: "enmissing", icon: "🙈", title: "Was fehlt?", color: "rose", grades: { 1: 0, 2: 3 } },
     { id: "enpattern", icon: "🔁", title: "Muster-Reihe", color: "lavender", grades: { 1: 0, 2: 3 } },
@@ -191,7 +192,7 @@
       title: "Große Zahlen",
       report: "Stellenwerte bis zur Million",
       color: "peach",
-      games: ["tenfold", "placetable"],
+      games: ["tenfold", "placetable", "lay"],
     },
     {
       id: "calc",
@@ -365,6 +366,23 @@
       { ask: ["bundle", "name"], from: 3, to: 6, choices: 4, label: "bis zur Million" },
       { ask: ["count"], from: 2, to: 6, span: 3, choices: 4, label: "Wie viele Tausender hat eine Million?" },
       { ask: ["bundle", "name", "count"], from: 0, to: 6, span: 6, choices: 4, label: "alles gemischt" },
+    ],
+    // Laying dots in the chart; ten in a column are bundled automatically.
+    lay: [
+      { ask: ["lay"], places: 3, min: 11, max: 100, label: "bis 100 legen" },
+      { ask: ["change"], places: 3, max: 100, change: [1, -1, 10, -10], label: "1 oder 10 mehr, auch bündeln" },
+      { ask: ["lay"], places: 3, digits: [3], zeros: true, label: "bis 1000 legen, mit Nullen" },
+      { ask: ["change"], places: 4, max: 1000, change: [1, -1, 10, -10, 100, -100], label: "100 mehr oder weniger, bündeln" },
+      { ask: ["lay"], places: 3, digits: [3], zeros: true, hidden: true, label: "Zahl nur hören, bis 1000" },
+      { ask: ["lay"], places: 5, digits: [4, 5], zeros: true, label: "bis 100 000 legen" },
+      {
+        ask: ["change"],
+        places: 7,
+        max: 1000000,
+        change: [1, -1, 1000, -1000, 10000, -10000, 100000],
+        label: "große Schritte, auch bündeln",
+      },
+      { ask: ["lay"], places: 7, digits: [5, 6], zeros: true, hidden: true, label: "Zahl nur hören, bis zur Million" },
     ],
     // Place-value chart: "places" columns, numbers with "digits" digits.
     placetable: [
@@ -1359,8 +1377,111 @@
       if (Boolean(config.zeros) === inner || length < 3) return Number(digits.join(""));
     }
   }
+  // Value of laid dots (ones first).
+  const layValue = (laid) => Object.values(laid).reduce((sum, d, i) => sum + d * 10 ** i, 0);
+  /*
+   * One + or − in a column of the chart. Ten dots in a column are bundled
+   * into one of the next column (again and again: 999 + 1); taking from an
+   * empty column first changes one of the next column into ten (unbundling).
+   * Returns the new dots and what was bundled, or null when not possible
+   * (no column left, below 0, above a million).
+   */
+  function layStep(laid, place, step, places) {
+    const dots = Array.from({ length: places }, (_, i) => laid[i] || 0);
+    const events = [];
+    if (step > 0) {
+      dots[place]++;
+      for (let i = place; dots[i] === 10; i++) {
+        if (i + 1 >= places) return null;
+        dots[i] = 0;
+        dots[i + 1]++;
+        events.push({ type: "bundle", from: i });
+      }
+    } else {
+      let j = place;
+      while (j < places && dots[j] === 0) j++;
+      if (j >= places) return null;
+      for (; j > place; j--) {
+        dots[j]--;
+        dots[j - 1] += 10;
+        events.push({ type: "unbundle", from: j });
+      }
+      dots[place]--;
+    }
+    if (layValue(dots) > 1000000) return null;
+    return { dots, events };
+  }
   function generateBig(mode, config, random) {
     const kind = pick(config.ask, random);
+    if (mode === "lay") {
+      const empty = Array(config.places).fill(0);
+      if (kind === "lay") {
+        const number = bigNumber(config, random);
+        return {
+          kind,
+          number,
+          answer: String(number),
+          places: config.places,
+          start: empty,
+          target: digitsOf(number),
+          hidden: Boolean(config.hidden),
+          shown: formatNumber(number),
+          speech: numberWord(number),
+          explain: placesExplain(number),
+          cue: `Zahl: ${formatNumber(number)}`,
+        };
+      }
+      // "Lege 100 mehr": half of the tasks need bundling (299 + 1, 3000 − 1).
+      const delta = pick(config.change, random);
+      const at = String(Math.abs(delta)).length - 1;
+      const cross = random() < 0.5;
+      let start;
+      let number;
+      // Not every step can cross (10 less up to 100): then a plain task.
+      let tries = 0;
+      do {
+        start = between(10, config.max - 1, random);
+        if (cross && tries++ < 100) {
+          const digits = digitsOf(start);
+          while (digits.length <= at) digits.push(0);
+          digits[at] = delta > 0 ? 9 : 0;
+          if (delta > 0 && at > 0 && random() < 0.5) digits[at - 1] = 9;
+          start = Number([...digits].reverse().join(""));
+        }
+        number = start + delta;
+      } while (
+        start < 1 ||
+        number < 1 ||
+        number > config.max ||
+        String(number).length > config.places ||
+        String(start).length > config.places
+      );
+      const amount = Math.abs(delta);
+      const before = digitsOf(start);
+      const after = digitsOf(number);
+      const bundled = Array.from({ length: config.places }, (_, i) => i).some(
+        (i) => i !== at && (before[i] || 0) !== (after[i] || 0),
+      );
+      const sign = delta > 0 ? "+" : "−";
+      return {
+        kind,
+        number,
+        answer: String(number),
+        places: config.places,
+        start: Array.from({ length: config.places }, (_, i) => digitsOf(start)[i] || 0),
+        startNumber: start,
+        target: digitsOf(number),
+        delta,
+        at,
+        bundled,
+        shown: formatNumber(number),
+        explain: {
+          text: `${formatNumber(start)} ${sign} ${formatNumber(amount)} = ${formatNumber(number)}.${bundled ? (delta > 0 ? " Dabei wird gebündelt." : " Dabei wird entbündelt.") : ""}`,
+          speech: `${capitalize(numberWord(start))} ${delta > 0 ? "plus" : "minus"} ${numberWord(amount)} ist ${numberWord(number)}.${bundled ? (delta > 0 ? " Dabei wird gebündelt." : " Dabei wird entbündelt.") : ""}`,
+        },
+        cue: `Es liegt ${formatNumber(start)}. Gesucht: ${formatNumber(amount)} ${delta > 0 ? "mehr" : "weniger"} – Lösung: ${formatNumber(number)}`,
+      };
+    }
     if (mode === "tenfold") {
       if (kind === "count") {
         // How many of a small place fit into a big one: 10, 100, 1000 …
@@ -2067,7 +2188,7 @@
   }
   function generate(mode, config, previous, random) {
     if (ENGLISH_GAMES.includes(mode)) return generateEnglish(mode, config, previous, random);
-    if (mode === "tenfold" || mode === "placetable") return generateBig(mode, config, random);
+    if (["tenfold", "placetable", "lay"].includes(mode)) return generateBig(mode, config, random);
     if (mode === "type") {
       const clear = (letters) =>
         [...letters].filter((x) => !AMBIGUOUS_LAUTE.includes(x));
@@ -4397,6 +4518,9 @@
     numberWord,
     formatNumber,
     PLACES,
+    placesExplain,
+    layStep,
+    layValue,
     maxLevel,
     clampLevel,
     makeQuestion,

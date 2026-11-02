@@ -1223,3 +1223,47 @@ test("big numbers: bundling ten makes the next place, the chart reads with zeros
   const q = C.makeQuestion("placetable", 6, null, seeded(3));
   assert.equal(q.shown, C.formatNumber(q.number));
 });
+
+test("laying big numbers: bundling, unbundling and tasks that need it", () => {
+  // 99 + 1: two bundles in a row; 100 − 1: two unbundles.
+  assert.deepEqual(C.layStep([9, 9, 0], 0, 1, 3), {
+    dots: [0, 0, 1],
+    events: [{ type: "bundle", from: 0 }, { type: "bundle", from: 1 }],
+  });
+  assert.deepEqual(C.layStep([0, 0, 1], 0, -1, 3), {
+    dots: [9, 9, 0],
+    events: [{ type: "unbundle", from: 2 }, { type: "unbundle", from: 1 }],
+  });
+  assert.deepEqual(C.layStep({ 0: 2, 1: 0, 2: 0 }, 1, 1, 3), { dots: [2, 1, 0], events: [] });
+  // No column left, nothing to take, above a million.
+  assert.equal(C.layStep([9, 9, 9], 0, 1, 3), null);
+  assert.equal(C.layStep([0, 0, 0], 1, -1, 3), null);
+  assert.equal(C.layStep([0, 0, 0, 0, 0, 0, 1], 0, 1, 7), null);
+  assert.equal(C.layValue([2, 5, 0, 3]), 3052);
+  const random = seeded(21);
+  let bundled = 0;
+  for (let level = 0; level <= C.maxLevel("lay"); level++)
+    for (let i = 0; i < 60; i++) {
+      const q = C.makeQuestion("lay", level, null, random);
+      const config = C.LEVELS.lay[level];
+      assert.equal(q.start.length, config.places);
+      assert.ok(q.target.length <= config.places, `${q.number}`);
+      assert.equal(C.layValue(q.target), q.number);
+      assert.ok(q.number >= 1 && q.number <= 1000000);
+      assert.ok(!/\d/.test(q.explain.speech));
+      if (q.kind === "change") {
+        assert.equal(C.layValue(q.start), q.startNumber);
+        assert.equal(q.number - q.startNumber, q.delta);
+        assert.ok(config.change.includes(q.delta));
+        // One + or − in the right column gives the answer, with bundling if needed.
+        const step = C.layStep(q.start, q.at, Math.sign(q.delta), q.places);
+        assert.equal(C.layValue(step.dots), q.number);
+        assert.equal(step.events.length > 0, q.bundled);
+        if (q.bundled) bundled++;
+      } else {
+        assert.ok(q.start.every((d) => d === 0));
+        if (config.digits) assert.ok(config.digits.includes(String(q.number).length));
+      }
+    }
+  assert.ok(bundled > 20, "many change tasks need bundling");
+});

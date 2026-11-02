@@ -65,6 +65,14 @@ async function solve(page) {
   else if (q.mode === "build") {
     await lay(page, q.target.tens - q.start.tens, q.target.ones - q.start.ones);
     await page.locator("#build-done").click();
+  } else if (q.mode === "lay") {
+    // Column by column, never past 9 or below 0, so nothing is bundled.
+    for (let i = 0; i < q.places; i++) {
+      const diff = (q.target[i] || 0) - q.start[i];
+      for (let k = 0; k < Math.abs(diff); k++)
+        await page.locator(`[data-lay="${i}"][data-step="${diff > 0 ? 1 : -1}"]`).click();
+    }
+    await page.locator("#build-done").click();
   } else await task(page, q.answer).click();
   return q;
 }
@@ -80,7 +88,7 @@ async function wrong(page) {
   const q = await question(page);
   if (together(q.mode)) return page.locator("#echo-retry").click();
   // The start never equals the target, so checking right away is wrong.
-  if (q.mode === "build") return page.locator("#build-done").click();
+  if (q.mode === "build" || q.mode === "lay") return page.locator("#build-done").click();
   const options =
     q.keys ||
     q.cards ||
@@ -634,6 +642,32 @@ test("a first grader climbs past grade 1 and opens the games of grade 2", async 
   // The child's grade stays the same.
   await page.locator(".brand").click();
   await expect(page.locator("#home-grid-title")).toContainText("1. Klasse");
+});
+
+test("laying big numbers: ten dots are bundled, an empty column is unbundled", async ({
+  page,
+}) => {
+  await openGame(page, "lay");
+  const ones = (step) => page.locator(`[data-lay="0"][data-step="${step}"]`);
+  const dots = (place) => page.locator(`#lay-dots-${place} .pt-dot`);
+  await expect(ones(-1)).toBeDisabled();
+  for (let i = 0; i < 10; i++) await ones(1).click();
+  // The tenth dot makes one ten.
+  await expect(dots(0)).toHaveCount(0);
+  await expect(dots(1)).toHaveCount(1);
+  await expect(page.locator("#lay-note")).toHaveText("10 Einer → 1 Zehner. Momo bündelt!");
+  await ones(-1).click();
+  await expect(dots(1)).toHaveCount(0);
+  await expect(dots(0)).toHaveCount(9);
+  await expect(page.locator("#lay-note")).toContainText("1 Zehner → 10 Einer");
+  // The top column cannot bundle further: no column left.
+  for (let i = 0; i < 9; i++) await page.locator('[data-lay="2"][data-step="1"]').click();
+  await expect(page.locator('[data-lay="2"][data-step="1"]')).toBeDisabled();
+  // A wrong number is not taken, the help shows the digits.
+  await page.locator("#build-done").click();
+  await page.locator("#build-done").click();
+  await expect(page.locator("#lay-digit-0")).toBeVisible();
+  await expect(page.locator("#lay-digit-2")).toHaveText("9");
 });
 
 test("menu: subject, then category, then game – and back the same way", async ({
