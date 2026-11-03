@@ -74,6 +74,8 @@ Die Aufgaben orientieren sich an typischen Arbeitsheft-Seiten der 2. Klasse.
 | Mehr oder weniger? | Zwei Mengen vergleichen: mehr, weniger, gleich viele, wie viele mehr | bis 10 → bis 20, mit „gleich viele“, Falle „groß heißt nicht viel“ (wenige große Dinge gegen viele kleine), Unterschied bestimmen |
 | Mengen-Kreise      | Dinge nach zwei Merkmalen sortieren (Mengendiagramm mit Schnittmenge): rot/Obst, kann fliegen/Tier, im Wasser/Tier | ein Kreis (drin oder draußen) → zwei Kreise → auch die Mitte → andere Merkmale → zählen: „Wie viele sind im Kreis?“, „nur im Kreis“, „in beiden“, „in keinem“ |
 
+Bei den Mengen-Kreisen tragen die Kreise ein Schild mit Bild (🔴 rot, 🧺 Obst, 🪶 kann fliegen, 🐾 Tier, 💧 im Wasser). Bei der ersten Aufgabe und immer, wenn die Kreise eine neue Regel bekommen, sagt Momo sie mit der Aufgabe an („Blauer Kreis: rot. Oranger Kreis: Obst. Mitte: beides.“), damit auch Kinder, die noch nicht lesen, wissen, worum es geht.
+
 Beim Vergleichen hilft Momo nach dem zweiten Fehler mit Paaren: Die Dinge ohne Partner leuchten auf. Bei den Mengen-Kreisen erscheinen dann die Beschriftungen der Felder („nur rot“, „beide“); beim Zählen leuchten die passenden Felder.
 
 **Zehner und Einer**

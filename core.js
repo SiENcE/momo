@@ -2088,12 +2088,12 @@
    * Set diagrams: two properties ("rings") and things with [icon, article,
    * word, in ring 1, in ring 2]. Only clear cases, so every thing has one place.
    */
-  const TIER = { label: "Tier", ask: "Ist es ein Tier?", yes: "ist ein Tier", no: "ist kein Tier" };
+  const TIER = { label: "Tier", icon: "🐾", ask: "Ist es ein Tier?", yes: "ist ein Tier", no: "ist kein Tier" };
   const VENN_SETS = [
     {
       rings: [
-        { label: "rot", ask: "Ist es rot?", yes: "ist rot", no: "ist nicht rot" },
-        { label: "Obst", ask: "Ist es Obst?", yes: "ist Obst", no: "ist kein Obst" },
+        { label: "rot", icon: "🔴", ask: "Ist es rot?", yes: "ist rot", no: "ist nicht rot" },
+        { label: "Obst", icon: "🧺", ask: "Ist es Obst?", yes: "ist Obst", no: "ist kein Obst" },
       ],
       items: [
         ["🍎", "der", "Apfel", 1, 1],
@@ -2115,7 +2115,7 @@
     },
     {
       rings: [
-        { label: "kann fliegen", ask: "Kann es fliegen?", yes: "kann fliegen", no: "kann nicht fliegen" },
+        { label: "kann fliegen", icon: "🪶", ask: "Kann es fliegen?", yes: "kann fliegen", no: "kann nicht fliegen" },
         TIER,
       ],
       items: [
@@ -2139,7 +2139,7 @@
     },
     {
       rings: [
-        { label: "im Wasser", ask: "Ist es im Wasser?", yes: "ist im Wasser", no: "ist nicht im Wasser" },
+        { label: "im Wasser", icon: "💧", ask: "Ist es im Wasser?", yes: "ist im Wasser", no: "ist nicht im Wasser" },
         TIER,
       ],
       items: [
@@ -4684,6 +4684,16 @@
         return { icon, article, word, a: Boolean(a), b: Boolean(b), zone };
       });
       const rings = one ? [ringA] : [ringA, ringB];
+      // A new rule (first task, other rings) is said with the task:
+      // "Blauer Kreis: rot. Oranger Kreis: Obst. Mitte: beides."
+      const ruleKey = rings.map((ring) => ring.label).join("|");
+      const middle = !one && !config.noBoth;
+      const rule =
+        previous?.ruleKey === ruleKey
+          ? ""
+          : one
+            ? `Kreis: ${ringA.label}.`
+            : `Blauer Kreis: ${ringA.label}. Oranger Kreis: ${ringB.label}.${middle ? " Mitte: beides." : ""}`;
       if (!config.ask) {
         const pool = config.noBoth ? items.filter((x) => x.zone !== "both") : items;
         const item = pick(
@@ -4700,6 +4710,8 @@
         return {
           ask: "place",
           rings,
+          ruleKey,
+          rule,
           item,
           placed,
           key: `${ringA.label}|${item.word}`,
@@ -4744,6 +4756,8 @@
       return {
         ask: kind,
         rings,
+        ruleKey,
+        rule,
         ring: ringIndex,
         placed,
         question: text,

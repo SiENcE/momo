@@ -1007,6 +1007,28 @@ test("syllables and lengthening never hand a single letter to the voice", () => 
       }
 });
 
+test("set diagrams say their rule when it is new, not on every task", () => {
+  const random = seeded(21);
+  const first = C.makeQuestion("venn", 2, null, random);
+  const [a, b] = first.rings;
+  assert.equal(first.rule, `Blauer Kreis: ${a.label}. Oranger Kreis: ${b.label}. Mitte: beides.`);
+  // Label pictures are never one of the things to sort.
+  for (const set of C.VENN_SETS)
+    for (const ring of set.rings) {
+      assert.ok(ring.icon, ring.label);
+      assert.ok(!set.items.some(([icon]) => icon === ring.icon), ring.label);
+    }
+  const next = C.makeQuestion("venn", 2, first, random);
+  assert.equal(next.rule, "");
+  // One ring, and a level without the middle, say only what they show.
+  assert.equal(C.makeQuestion("venn", 0, null, random).rule, `Kreis: ${a.label}.`);
+  assert.ok(!C.makeQuestion("venn", 1, null, random).rule.includes("Mitte"));
+  // Other rings later on: the new rule is said again.
+  const other = C.makeQuestion("venn", 3, next, random);
+  assert.notEqual(other.ruleKey, first.ruleKey);
+  assert.ok(other.rule.startsWith("Blauer Kreis"));
+});
+
 test("swapped tens and ones are counted and reported", () => {
   const state = C.defaultState();
   const now = new Date(2026, 9, 14, 18).getTime();

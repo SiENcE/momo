@@ -529,7 +529,11 @@
           { more: "Wo sind mehr?", fewer: "Wo sind weniger?", diff: `Wie viele sind ${q.bigger} mehr?` }[q.kind],
         );
       case "venn":
-        return same(q.ask === "place" ? `Wohin gehört ${q.item.article} ${q.item.word}?` : q.question);
+        return same(
+          [q.rule, q.ask === "place" ? `Wohin gehört ${q.item.article} ${q.item.word}?` : q.question]
+            .filter(Boolean)
+            .join(" "),
+        );
       case "calc": {
         const place = P[Math.log10(q.unit)].name;
         return same(
@@ -764,7 +768,7 @@
             ? `<button class="venn-zone zone-${name}" data-answer="${name}" aria-label="${aria[name]}">${inner}</button>`
             : `<div class="venn-zone zone-${name}">${inner}</div>`;
         };
-        const diagram = `<div class="venn${one ? " one" : ""}">${q.rings.map((ring, i) => `<span class="venn-ring ring-${i}"></span><span class="venn-label label-${i}">${ring.label}</span>`).join("")}${zones.map(zone).join("")}</div>`;
+        const diagram = `<div class="venn${one ? " one" : ""}">${q.rings.map((ring, i) => `<span class="venn-ring ring-${i}"></span><span class="venn-label label-${i}"><span aria-hidden="true">${ring.icon}</span> ${ring.label}</span>`).join("")}${zones.map(zone).join("")}</div>`;
         return place
           ? `<div class="venn-target" aria-hidden="true">${q.item.icon}</div>${diagram}`
           : `${diagram}${numberButtons(q.choices)}`;
