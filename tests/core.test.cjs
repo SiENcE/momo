@@ -757,7 +757,9 @@ test("number line, hundred chart and counting in steps are consistent", () => {
   each("steps", (q, config) => {
     assert.ok(config.steps.includes(q.step));
     for (let i = 1; i < q.sequence.length; i++) assert.equal(q.sequence[i] - q.sequence[i - 1], q.step);
-    for (const x of q.sequence) assert.ok(x >= 1 && x <= 100);
+    for (const x of q.sequence) assert.ok(x >= 1 && x <= (config.max || 100));
+    // Big steps start on round numbers (230, 330 … or 2300, 3300 …).
+    if (config.align) assert.equal(q.sequence[0] % Math.min(config.align, Math.abs(q.step)), 0);
     assert.equal(q.answer, String(q.sequence[q.gap]));
     // Distractors are never numbers already shown in the row.
     for (const x of q.choices.map(Number))
@@ -812,16 +814,22 @@ test("calculating with tens and reading bar charts", () => {
   for (let level = 0; level <= C.maxLevel("calc"); level++)
     for (let i = 0; i < 60; i++) {
       const q = C.makeQuestion("calc", level, null, random);
+      // Tens up to 100 (grade 2), hundreds up to 1000 (grade 3), more in grade 4.
+      const unit = C.LEVELS.calc[level].unit || 10;
+      assert.equal(q.unit, unit);
       assert.equal(q.result, q.minus ? q.a - q.b : q.a + q.b);
-      assert.ok(q.result >= 1 && q.result <= 100);
-      if (q.op.startsWith("T")) assert.ok(q.a % 10 === 0 && q.b % 10 === 0);
-      if (q.op.startsWith("N")) assert.ok(q.a % 10 !== 0 && q.b % 10 === 0);
+      assert.ok(q.result >= 1 && q.result <= 10 * unit);
+      if (q.op.startsWith("T")) assert.ok(q.a % unit === 0 && q.b % unit === 0);
+      // 80 − 40 would show the answer as the second number.
+      if (q.op === "T-T") assert.notEqual(q.a, 2 * q.b);
+      if (q.op.startsWith("N")) assert.ok(q.a % unit !== 0 && q.b % unit === 0);
       if (q.fill) {
-        // Exactly to the neighbouring ten.
-        assert.equal(q.result % 10, 0);
+        // Exactly to the neighbouring ten (hundred, thousand).
+        assert.equal(q.result % unit, 0);
         assert.equal(q.answer, String(q.b));
-        assert.ok(q.b >= 1 && q.b <= 9);
+        assert.ok(q.b >= 1 && q.b < unit && q.b % (unit / 10) === 0);
       } else assert.equal(q.answer, String(q.result));
+      for (const x of q.choices) assert.ok(Number(x) >= 0 && Number(x) <= 10 * unit);
       assert.ok(!/\d/.test(q.speech));
     }
   for (let level = 0; level <= C.maxLevel("graph"); level++)
@@ -926,6 +934,20 @@ test("across the ten, times tables, money and the clock", () => {
   });
   each("times", (q, config) => {
     assert.ok(config.rows.includes(q.cols));
+    assert.ok(!/\d/.test(q.speech || ""));
+    if (q.parts) {
+      // Grades 3 and 4: the equation holds with the answer in the gap.
+      const [x, op, y, , z] = q.parts;
+      if (q.ask === "remainder") {
+        const [whole, rest] = q.answer.split(" R ").map(Number);
+        assert.equal(whole * y + rest, x);
+        assert.ok(rest >= 1 && rest < y);
+        for (const choice of q.choices) assert.ok(q.say[choice] && !/\d/.test(q.say[choice]));
+      } else if (z === null) assert.equal(Number(q.answer), op === ":" ? x / y : x * y);
+      else assert.equal(Number(q.answer) * y, z);
+      if (q.ask === "tens") assert.ok(q.parts.some((n) => typeof n === "number" && n % 10 === 0 && n >= 20));
+      return;
+    }
     assert.equal(q.number, q.rows * q.cols);
     if (q.ask === "task") {
       assert.equal(q.answer, `${q.rows} · ${q.cols}`);
@@ -1027,12 +1049,17 @@ test("grades: every game names the first level of each of its grades", () => {
       assert.ok(C.levelGrade(activity.id, level) >= C.levelGrade(activity.id, level - 1), activity.id);
   }
   const available = C.availableGrades().map((x) => x.id);
-  // Grades 3 and 4 so far only through "Große Zahlen".
   assert.deepEqual(available, [1, 2, 3, 4]);
   assert.equal(C.levelGrade("tenfold", C.gradeStart("tenfold", 4)), 4);
   assert.equal(C.levelGrade("placetable", C.maxLevel("placetable")), 4);
-  // Grade 2 offers every game, grade 1 the ones that start in grade 1.
-  assert.ok(C.ACTIVITIES.every((x) => C.inGrade(x.id, 2)));
+  // Grade 2 offers every game up to grade 2, grade 1 the ones that start in grade 1;
+  // a few games only start in grade 3 and show from there on.
+  const third = ["column", "units", "tense"];
+  assert.ok(C.ACTIVITIES.every((x) => C.inGrade(x.id, 2) !== third.includes(x.id)));
+  assert.ok(C.ACTIVITIES.every((x) => C.inGrade(x.id, 3) && C.inGrade(x.id, 4)));
+  // Grades 3 and 4 have their own levels in every subject's main games.
+  for (const id of ["times", "calc", "steps", "compare", "spell", "wordtype"])
+    assert.equal(C.levelGrade(id, C.maxLevel(id)), 4, id);
   for (const id of ["merk", "extend", "place", "chart", "calc", "times"])
     assert.equal(C.inGrade(id, 1), false, id);
   for (const grade of available) {

@@ -201,7 +201,9 @@ for (const activity of C.ACTIVITIES) {
   test(`instruction is read before content: ${activity.id}`, async ({
     page,
   }) => {
-    await load(page);
+    // Games that start in grade 3 show from grade 3 on.
+    const grade = Math.min(...Object.keys(activity.grades).map(Number));
+    await load(page, grade > 2 ? { settings: { autoSpeak: true, grade } } : {});
     await openGame(page, activity.id);
     const first = await page.evaluate(() => window.WieseDebug.question);
     // "type" plays its content as a sound file instead of the voice; math

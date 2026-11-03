@@ -21,18 +21,18 @@ Beim ersten Start fragt Momo einmal: „In welche Klasse gehst du?“ Angeboten 
 | Klasse | Was dazugehört |
 | --- | --- |
 | 1. Klasse | die ersten Stufen von: Laute, Anlaute, Laute verbinden, ABC, Silben, Merken; Mengen, Zahlen bis 20, über die 10 rechnen, Geld bis 20 Cent, volle und halbe Stunden, Säulen lesen; Englisch |
-| 2. Klasse | die höheren Stufen davon und zusätzlich Merkwörter, Wörter verlängern, Zahlenhaus, Hundertertafel, Weiterzählen, Vergleichen, Ordnen, Zahlen-Nachbarn, Zehner rechnen und Einmaleins |
-| 3. Klasse | Große Zahlen bis 1000: 10 Hunderter sind 1 Tausender, Stellentafel mit Hundertern, Nullen, Zerlegen (weitere Spiele folgen) |
-| 4. Klasse | Große Zahlen bis zur Million: Zehntausender, Hunderttausender, Million, große Zahlen lesen und zerlegen (weitere Spiele folgen) |
+| 2. Klasse | die höheren Stufen davon und zusätzlich Merkwörter, Wörter verlängern, doppelte Mitlaute und ie (Schreib-Detektiv), Nomen, Verben und Adjektive; Zahlenhaus, Hundertertafel, Weiterzählen, Vergleichen, Ordnen, Zahlen-Nachbarn, Zehner rechnen und Einmaleins |
+| 3. Klasse | Deutsch: ck und tz, ä und äu durch verwandte Wörter, Wortarten ohne Bild und im Satz, Pronomen, Zeitformen (Gegenwart und Vergangenheit, auch unregelmäßig: gehen – ging). Mathe: Große Zahlen bis 1000, mit Hundertern rechnen (352 + 300, 370 + _ = 400), schriftlich plus und minus, Geteiltaufgaben, Weiterzählen in 100er-, 50er- und 25er-Schritten, Vergleichen bis 1000, Umrechnen (m und cm, € und ct, Stunden und Minuten) |
+| 4. Klasse | Deutsch: ss oder ß, das oder dass, Verben als Nomen (das Schwimmen), Artikel, Perfekt mit habe oder bin, alle vier Zeitformen. Mathe: Große Zahlen bis zur Million, mit Tausendern rechnen, schriftlich bis zur Million und mit drei Zahlen, Zehnereinmaleins, Malnehmen durch Zerlegen, Teilen mit Rest, große Schritte, Vergleichen bis zur Million, kg, km und l, Brüche (½ kg, ¾ h) und Kommazahlen (2,50 €) |
 
-In der 3. und 4. Klasse starten die übrigen Spiele auf den Stufen der 2. Klasse und werden von dort aus schwerer.
+Spiele ohne eigene Stufen für die 3. oder 4. Klasse starten dort auf den Stufen der 2. Klasse und werden von dort aus schwerer. „Schriftlich rechnen“, „Umrechnen“ und „Zeitformen“ beginnen erst in der 3. Klasse.
 
-Spiele, die erst in einer höheren Klasse beginnen (z. B. Zahlenhaus oder Einmaleins), erscheinen für jüngere Kinder, sobald sie in einem passenden Spiel alle Aufgaben ihrer Klasse geschafft haben – also dort auf den Stufen der höheren Klasse angekommen sind. Passend heißt: ein Spiel aus demselben Bereich (Zahlen-Blick oder Zahlen bauen öffnen das Zahlenhaus, Silben klatschen öffnet Merkwörter und Wörter verlängern). Hat der Bereich kein solches Spiel (Vergleichen, Einmaleins), reicht ein Spiel desselben Fachs. Das Kind sieht dann auf der Ergebnis-Seite „Neu: Spiel …!“. Einmal geöffnete Spiele bleiben offen, auch wenn es später wieder leichter wird.
+Spiele, die erst in einer höheren Klasse beginnen (z. B. Zahlenhaus oder Einmaleins), erscheinen für jüngere Kinder, sobald sie in einem passenden Spiel alle Aufgaben ihrer Klasse geschafft haben – also dort auf den Stufen der höheren Klasse angekommen sind. Passend heißt: ein Spiel aus demselben Bereich (Zahlen-Blick oder Zahlen bauen öffnen das Zahlenhaus, Silben klatschen öffnet Merkwörter und Wörter verlängern). Hat der Bereich kein solches Spiel (Vergleichen, Einmaleins, Messen), reicht ein Spiel desselben Fachs. „Schriftlich rechnen“ öffnet sich zum Beispiel, wenn „Zehner rechnen“ bei den Hunderter-Aufgaben der 3. Klasse angekommen ist, „Zeitformen“ über die „Wortarten“. Das Kind sieht dann auf der Ergebnis-Seite „Neu: Spiel …!“. Einmal geöffnete Spiele bleiben offen, auch wenn es später wieder leichter wird.
 
 Sonst muss das Kind nichts einstellen. Auf der Startseite gibt es einen großen **Spielen**-Knopf, der das am längsten nicht gespielte Spiel startet. Darunter wählt das Kind in drei Schritten selbst:
 
 1. **Fach:** Deutsch, Mathe oder Englisch
-2. **Bereich:** bei Deutsch *Laute üben*, *ABC üben*, *Richtig schreiben* und *Zu zweit*; bei Mathe *Mengen*, *Zehner und Einer*, *Große Zahlen*, *Zahlen finden*, *Vergleichen*, *Rechnen*, *Einmaleins*, *Geld und Uhr* und *Diagramme*; bei Englisch *Hören und zeigen*, *Farben und Zahlen* und *Zu zweit*
+2. **Bereich:** bei Deutsch *Laute üben*, *ABC üben*, *Richtig schreiben*, *Wörter und Sätze* und *Zu zweit*; bei Mathe *Mengen*, *Zehner und Einer*, *Große Zahlen*, *Zahlen finden*, *Vergleichen*, *Rechnen*, *Einmaleins*, *Messen*, *Geld und Uhr* und *Diagramme*; bei Englisch *Hören und zeigen*, *Farben und Zahlen* und *Zu zweit*
 3. **Spiel** aus diesem Bereich
 
 Das ✕ im Spiel und „Anderes Spiel“ führen zurück zum Bereich, „← Zurück“ eine Stufe höher.
@@ -42,7 +42,7 @@ Das ✕ im Spiel und „Anderes Spiel“ führen zurück zum Bereich, „← Zur
 - **Hilfe in Stufen statt sichtbarer Lösung:** Nach dem ersten Fehler gibt Momo einen Tipp (und liest ihn vor), nach dem zweiten erscheint eine ABC-Hilfe bzw. das Bild. Bei „Hören & tippen“ leuchtet nach drei Fehlversuchen der richtige Buchstabe. Falsch getippte Karten werden ausgegraut.
 - Nach einer richtigen Antwort geht es automatisch weiter.
 
-## Deutsch: die zwölf Spiele und ihre Stufen
+## Deutsch: die fünfzehn Spiele und ihre Stufen
 
 | Spiel              | Was wird geübt?                       | Wie es schwerer wird                                                          |
 | ------------------ | ------------------------------------- | ----------------------------------------------------------------------------- |
@@ -52,6 +52,9 @@ Das ✕ im Spiel und „Anderes Spiel“ führen zurück zum Bereich, „← Zur
 | Merkwörter         | Besondere Buchstaben C, Qu, V, X, Y in ganzen Wörtern: „?ogel“ – V, F oder W? | Qu → V (wie F) → x (wie ks) → C → y am Ende → V wie W → C/Y gemischt → alle → ohne Bild |
 | Silben klatschen   | Silben zählen, fehlende Silbe finden („? – ge“ → Gei) | 1–2 Silben → bis 3 → bis 4 → nur hören, bis 5 → fehlende Silbe → lange Wörter |
 | Wörter verlängern  | d oder t, g oder k, b oder p am Wortende: „Hun?“ – verlängern: Hunde | d/t → g/k und b/p → gemischt → ohne Bild → Eigenschaftswörter (gelb – gelbe) → alles |
+| Schreib-Detektiv   | Rechtschreibregeln an einer Lücke: „So?e“ – nn oder n? | doppelte Mitlaute (Sonne, Hose) und i/ie mit Bild (2. Klasse) → ck/k, tz/z, ä/e und äu/eu mit verwandtem Wort (Bäume – Baum) (3. Klasse) → ss/ß, das/dass im Satz, alles gemischt (4. Klasse) |
+| Wortarten          | Nomen, Verb, Adjektiv bestimmen, später Pronomen und Artikel | einzelne Wörter mit Bild: Nomen/Verb, Nomen/Adjektiv, alle drei (2. Klasse) → ohne Bild, im Satz, Pronomen (3. Klasse) → Verben als Nomen („das Schwimmen“, „beim Lesen“), Gefühle als Nomen, Artikel (4. Klasse) |
+| Zeitformen         | Verbformen in Sätzen: „Heute spiele ich Fußball. Gestern … ich Fußball.“ | Vergangenheit regelmäßig (spielte), unregelmäßig (ging), Gegenwart oder Vergangenheit? (3. Klasse) → Perfekt (habe gespielt, bin gegangen), habe oder bin?, alle vier Zeitformen benennen (4. Klasse) |
 | Wer fehlt?         | Lücken in einer ABC-Reihe füllen      | 4er- bis 8er-Reihen, 1 bis 3 Lücken, mehr Auswahl                             |
 | ABC-Nachbarn       | Vorgänger, Nachfolger, „dazwischen“   | danach → davor → gemischt → dazwischen, 3 bis 5 Karten                        |
 | ABC-Werkstatt      | Buchstaben ordnen                     | 3 bis 5 Buchstaben, mit Lücken, rückwärts                                     |
@@ -59,7 +62,7 @@ Das ✕ im Spiel und „Anderes Spiel“ führen zurück zum Bereich, „← Zur
 | Quatschwort-Echo 👥 | Fantasiewörter nachsprechen           | 2 bis 5 Silben, schwierige Lautverbindungen, zwei Wörter                      |
 | Mitmach-Spiel 👥   | Bewegungsfolgen nachmachen            | 2 bis 5 Bewegungen, auch rückwärts                                            |
 
-## Mathe: die einundzwanzig Spiele (Zahlenraum bis 100, große Zahlen bis zur Million)
+## Mathe: die dreiundzwanzig Spiele (Zahlenraum bis 100, in der 3. und 4. Klasse bis 1000 und bis zur Million)
 
 Die Aufgaben orientieren sich an typischen Arbeitsheft-Seiten der 2. Klasse.
 
@@ -87,13 +90,13 @@ Beim Vergleichen hilft Momo nach dem zweiten Fehler mit Paaren: Die Dinge ohne P
 | -------------- | ------------------------------------------------ | -------------------- |
 | Zahlenstrahl   | Welche Zahl zeigt der Ballon?                    | 0–20 → 0–100 (volle Zehner, Fünfer) → Ausschnitte mit weniger Beschriftung |
 | Hundertertafel | Fehlende Zahl in einem Ausschnitt (rechts 1 mehr, unten 10 mehr) | Reihe → Spalte → Kreuz → 3×3-Ausschnitt → schräge Ecken → nur eine Zahl gegeben |
-| Weiterzählen   | Zahlenreihen fortsetzen oder Lücken füllen       | +1, −1, ±10, +2, ±5, Lücke in der Reihe, gemischte Schritte |
+| Weiterzählen   | Zahlenreihen fortsetzen oder Lücken füllen       | +1, −1, ±10, +2, ±5, Lücke in der Reihe, gemischte Schritte (2. Klasse) → 100er-, 20er-, 25er-, 50er-Schritte bis 1000 (3. Klasse) → 1000er-Schritte, große Schritte bis zur Million (4. Klasse) |
 
 **Vergleichen**
 
 | Spiel              | Was wird geübt?                         | Wie es schwerer wird |
 | ------------------ | --------------------------------------- | -------------------- |
-| Krokodil-Vergleich | < oder > („Das Krokodil frisst die größere Zahl“) | verschiedene Zehner → nahe Zahlen → gleiche Zehner → Zahlendreher (62/26) → mit = → „30 + 5“ gegen eine Zahl |
+| Krokodil-Vergleich | < oder > („Das Krokodil frisst die größere Zahl“) | verschiedene Zehner → nahe Zahlen → gleiche Zehner → Zahlendreher (62/26) → mit = → „30 + 5“ gegen eine Zahl (2. Klasse) → bis 1000 mit Zahlendrehern (3. Klasse) → bis zur Million, auch verschieden lange Zahlen (9876 gegen 12 345) (4. Klasse) |
 | Zahlen ordnen      | Zahlen der Größe nach antippen          | 3 bis 6 Zahlen, gleiche Zehner, Zahlendreher, von groß nach klein |
 | Zahlen-Nachbarn    | Vorgänger, Nachfolger, dazwischen, Nachbarzehner | erst bis 50, dann über den Zehner (39 → 40), Nachbarzehner davor/danach, gemischt |
 
@@ -101,14 +104,25 @@ Beim Vergleichen hilft Momo nach dem zweiten Fehler mit Paaren: Die Dinge ohne P
 
 | Spiel          | Was wird geübt?                      | Wie es schwerer wird |
 | -------------- | ------------------------------------ | -------------------- |
-| Zehner rechnen | Mit Zehnerzahlen rechnen             | 50 + 30, 70 − 20, 52 + 30, 76 − 20, bis zum Nachbarzehner (32 + _ = 40), zurück (33 − _ = 30), gemischt |
+| Zehner rechnen | Mit Zehnerzahlen rechnen, später mit Hundertern und Tausendern | 50 + 30, 70 − 20, 52 + 30, 76 − 20, bis zum Nachbarzehner (32 + _ = 40), zurück (33 − _ = 30), gemischt (2. Klasse) → 300 + 400, 352 + 300, bis zum Nachbarhunderter (370 + _ = 400) (3. Klasse) → 3000 + 4000, bis zum Nachbartausender, 300 000 + 400 000 (4. Klasse) |
 | Über den Zehner | Plus und Minus mit Zehnerübergang, über den vollen Zehner | 7 + 5, 13 − 5, 38 + 5, 52 − 7, in Schritten (38 + 2 + 3), zweistellig ohne und mit Übergang (34 + 25, 38 + 25, 62 − 27), gemischt |
+| Schriftlich rechnen | Schriftliche Addition und Subtraktion untereinander, mit Stellentafel-Spalten und Überträgen | plus mit einem, dann mehreren Überträgen, minus (bis 1000, 3. Klasse) → bis 100 000, drei Zahlen plus, plus und minus bis zur Million (4. Klasse) |
+
+Beim schriftlichen Rechnen zeigt Momo für das Ergebnis ein Kästchen pro Spalte, so verrät die Länge nichts. Falsche Antworten sind die typischen Fehler: Übertrag vergessen, beim Minus die kleinere von der größeren Ziffer abgezogen, Übertrag beim Minus vergessen. Nach dem zweiten Fehler erscheinen die Überträge klein über dem Strich, nach dem dritten rechnet Momo die Einer-Spalte vor.
 
 **Einmaleins**
 
 | Spiel     | Was wird geübt?                           | Wie es schwerer wird |
 | --------- | ----------------------------------------- | -------------------- |
-| Malfelder | Malaufgaben aus Punktefeldern, Kernaufgaben, Nachbar- und Tauschaufgaben | Punkte zählen → passende Malaufgabe wählen → 2er, 5er, 10er → bis 5er → Nachbaraufgaben (6 · 5 = 5 · 5 + 5) → Tauschaufgaben → alle Reihen |
+| Malfelder | Malaufgaben aus Punktefeldern, Kernaufgaben, Nachbar- und Tauschaufgaben, Teilen | Punkte zählen → passende Malaufgabe wählen → 2er, 5er, 10er → bis 5er → Nachbaraufgaben (6 · 5 = 5 · 5 + 5) → Tauschaufgaben → alle Reihen (2. Klasse) → Geteiltaufgaben (42 : 7), „_ · 7 = 42“ (3. Klasse) → Zehnereinmaleins (3 · 40, 120 : 4), zerlegen (4 · 23 = 4 · 20 + 4 · 3), Teilen mit Rest (23 : 5 = 4 R 3) (4. Klasse) |
+
+**Messen** (ab der 3. Klasse)
+
+| Spiel     | Was wird geübt?                           | Wie es schwerer wird |
+| --------- | ----------------------------------------- | -------------------- |
+| Umrechnen | Größen in die kleinere oder größere Einheit umrechnen | 3 m = 300 cm, 2 € = 200 ct, 400 cm = 4 m, Stunden, Minuten, Sekunden, 3 m 25 cm = 325 cm (3. Klasse) → kg, km, l, ½ kg, ¼ h, ¾ l, Kommazahlen (2,50 € = 250 ct, 1,5 km = 1500 m), alles gemischt (4. Klasse) |
+
+Falsche Antworten beim Umrechnen: die falsche Umrechnungszahl (1 h = 100 min, also ½ h = 50 min), eine Null zu viel oder zu wenig, Zahlen einfach nebeneinander geschrieben (3 m 5 cm = 35 cm). Nach dem zweiten Fehler zeigt Momo die Umrechnung (1 m = 100 cm), nach dem dritten die Rechnung (3 · 100 cm).
 
 **Geld und Uhr**
 
@@ -139,7 +153,7 @@ Die gesuchte Zahl wird nie vorgelesen oder angezeigt. Zahlen spricht Momo immer 
 
 Die Spiele mit 👥 spielt ihr gemeinsam: Ein Erwachsener entscheidet mit „Hat geklappt“ oder „Noch nicht ganz“. Es gibt keine Mikrofonaufnahme und keine Spracherkennung.
 
-Buchstaben werden als **Laute** ausgegeben („mmm“), nie als Buchstabennamen („Emm“) – so wie in der Grundschule mit der Anlauttabelle. Im Anlautspiel wird das **ganze Wort** gesprochen und nach dem Lösen der Anfangslaut vorgespielt; nach zwei Fehlern spielt Momo die Laute der übrigen Karten zum Vergleichen vor. Die Wortauswahl vermeidet Anfänge wie „Sch“, „Sp“, „St“ und „Ei“. Beim Laute-Zauber leuchtet zu jedem Laut ein Punkt auf; nach zwei Fehlern spielt Momo die Laute ohne Pausen, sodass sie zum Wort verschmelzen. Bei den ABC-Spielen sagt die Stimme keine Buchstaben, sondern nur „Welcher Buchstabe kommt danach?“. Bei „Wer fehlt?“ hört das Kind den Laut jedes gewählten Buchstabens. Nach einem Fehler sagt Momo bei den ABC-Spielen klar, dass der gewählte Buchstabe nicht passt und ein anderer richtig ist („R passt nicht. Ein anderer Buchstabe gehört in die Lücke …“).
+Buchstaben werden als **Laute** ausgegeben („mmm“), nie als Buchstabennamen („Emm“) – so wie in der Grundschule mit der Anlauttabelle. Im Anlautspiel wird das **ganze Wort** gesprochen und nach dem Lösen der Anfangslaut vorgespielt; nach zwei Fehlern spielt Momo die Laute der übrigen Karten zum Vergleichen vor. Die Wortauswahl vermeidet Anfänge wie „Sch“, „Sp“, „St“ und „Ei“. Beim Laute-Zauber leuchtet zu jedem Laut ein Punkt auf; nach zwei Fehlern spielt Momo die Laute ohne Pausen, sodass sie zum Wort verschmelzen. Bei den ABC-Spielen sagt die Stimme keine Buchstaben, sondern nur „Welcher Buchstabe kommt danach?“. Bei „Wer fehlt?“ hört das Kind den Laut jedes gewählten Buchstabens. Beim Schreib-Detektiv werden die Karten (nn, ie, ß …) nie vorgelesen: Momo spricht nur das ganze Wort (bei das/dass den ganzen Satz) und erklärt nach dem Lösen die Regel („Der Selbstlaut ist kurz, darum doppelt.“, „Bäume kommt von Baum.“). Bei den Wortarten steht das gesuchte Wort in Großbuchstaben, damit die Schreibweise nichts verrät; nach einem Fehler schlägt Momo die Proben vor (der/die/das davor? ich davor? sehr davor?), nach dem Lösen erscheint das Wort richtig geschrieben. Nach einem Fehler sagt Momo bei den ABC-Spielen klar, dass der gewählte Buchstabe nicht passt und ein anderer richtig ist („R passt nicht. Ein anderer Buchstabe gehört in die Lücke …“).
 
 ## Englisch: die sieben Spiele
 
