@@ -1,5 +1,7 @@
 # Momo 🐰
 
+**Direkt ausprobieren:** https://sience.github.io/momo/
+
 Momo ist eine freundliche Lern-App für Deutsch, Mathe und Englisch in der Grundschule (früher hieß sie „Wörterwiese“). Es gibt Spiele für die 1. und 2. Klasse (ab etwa 6 Jahren) und erste Spiele für die 3. und 4. Klasse (große Zahlen bis zur Million); weitere folgen. Momo, der kleine Hase, begleitet kurze Übungen, die sich automatisch an das Kind anpassen. Mit den gesammelten Sternen pflanzt das Kind im Garten Futter für Momo – ohne Zeitdruck, Minuspunkte oder Werbung.
 
 ## Starten
