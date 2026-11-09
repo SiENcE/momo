@@ -79,6 +79,6 @@ Plain scripts loaded in this order: `core.js` → `garden.js` → `math.js` → 
 ## Housekeeping
 
 - `dist/` is build output (ignored).
-- Git repository (branch `master`). Commit only runtime, test, tool and doc files; `.gitignore` excludes `node_modules/`, `dist/`, test output, `.backup-v1/`, the personal launchers `start.bat`/`start2.bat` and editor/OS files.
+- Git repository (branch `main`, remote `origin` = github.com/SiENcE/momo, published via GitHub Pages). Commit only runtime, test, tool and doc files; `.gitignore` excludes `node_modules/`, `dist/`, test output, `.backup-v1/`, the personal launchers `start.bat`/`start2.bat` and editor/OS files.
 - `.backup-v1/` holds the pre-redesign version (ignored); leave it unless the user asks to remove it.
 - Keep README.md (German, for parents and teachers) in sync when behaviour changes.
