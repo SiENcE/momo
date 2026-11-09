@@ -182,23 +182,32 @@ for (const activity of C.ACTIVITIES) {
 }
 
 test("nothing gives the solution away by default", async ({ page }) => {
-  // Opens every game with choices through the menu (grade 4 lists all games).
+  // Opens every game with choices through the menu: grade 2 lists most of
+  // them, the games that start in grade 3 come from a grade-3 save.
   test.setTimeout(90000);
-  await seedGrade(page, 4, {});
-  await page.evaluate(() => {
-    window.speechSynthesis.voices = [
-      { name: "Deutsch", lang: "de-DE", voiceURI: "de", localService: true },
-      { name: "English", lang: "en-GB", voiceURI: "en", localService: true },
-    ];
-    window.SpeechSynthesisUtterance = class {
-      constructor(text) {
-        this.text = text;
-      }
-    };
-    speechSynthesis.dispatchEvent(new Event("voiceschanged"));
-  });
+  const voices = () =>
+    page.evaluate(() => {
+      window.speechSynthesis.voices = [
+        { name: "Deutsch", lang: "de-DE", voiceURI: "de", localService: true },
+        { name: "English", lang: "en-GB", voiceURI: "en", localService: true },
+      ];
+      window.SpeechSynthesisUtterance = class {
+        constructor(text) {
+          this.text = text;
+        }
+      };
+      speechSynthesis.dispatchEvent(new Event("voiceschanged"));
+    });
   const english = C.ENGLISH_GAMES.filter((mode) => !together(mode));
-  for (const mode of ["type", "initial", "blend", "missing", "neighbor", "order", ...C.MATH_GAMES, ...english]) {
+  const modes = ["type", "initial", "blend", "missing", "neighbor", "order", ...C.MATH_GAMES, ...english];
+  // Grade 0 would mean "every game", so start without a grade at all.
+  let grade = null;
+  for (const mode of [...modes.filter((x) => C.inGrade(x, 2)), ...modes.filter((x) => !C.inGrade(x, 2))]) {
+    if (grade === null || !C.inGrade(mode, grade)) {
+      grade = C.inGrade(mode, 2) ? 2 : 3;
+      await seedGrade(page, grade, {});
+      await voices();
+    }
     await page.locator(".brand").click();
     await openGame(page, mode);
     await expect(page.locator("#adult-cue")).toBeHidden();
@@ -212,7 +221,7 @@ test("nothing gives the solution away by default", async ({ page }) => {
       const q = await question(page);
       // The number to find is nowhere on screen except on its answer card.
       if (mode === "bundle") await expect(page.locator(".rod-label").first()).toBeHidden();
-      if (["line", "chart", "steps", "adjacent", "calc", "units"].includes(mode)) {
+      if (["line", "chart", "steps", "adjacent", "calc", "units", "double"].includes(mode)) {
         const shown = await page.evaluate(() =>
           [
             ...document.querySelectorAll(
@@ -347,6 +356,9 @@ test("adults can override levels, show lowercase and reset everything", async ({
   await expect(page.locator("#auto-speak")).not.toBeChecked();
   await expect(await levelSelect(page, "order")).toHaveValue("7");
   await adultTab(page, "data");
+  // A short Impressum: private, non-commercial, data only in this browser.
+  await expect(page.locator("#imprint")).toContainText("F. Fischer");
+  await expect(page.locator("#imprint")).toContainText("lokal im Browser");
   await page.locator("#reset-progress").click();
   await page.locator("#cancel-reset").click();
   await expect(page.locator("#total-stars")).toHaveText("1");
@@ -524,7 +536,7 @@ test("home, garden and every game fit the viewport without horizontal scrolling"
       "woerterwiese.v1",
       JSON.stringify({
         version: 2,
-        // Grade 4 lists every game; the levels are among the widest ones.
+        // The levels are among the widest ones; the grade follows the game.
         settings: { grade: 4 },
         levels: {
           column: 7,
@@ -567,12 +579,25 @@ test("home, garden and every game fit the viewport without horizontal scrolling"
           ennumbers: 3,
           ensimon: 6,
           ensay: 5,
+          blitz: 17,
+          complete: 4,
+          double: 5,
+          family: 4,
+          mix: 5,
         },
       }),
     ),
   );
   await page.reload();
+  const levels = await page.evaluate(() => JSON.parse(localStorage.getItem("woerterwiese.v1")).levels);
+  let grade = 4;
   for (const activity of C.ACTIVITIES) {
+    // Easy games are hidden in grade 4: switch to the grade of the level.
+    const wanted = C.levelGrade(activity.id, levels[activity.id] ?? 0);
+    if (!C.inGrade(activity.id, grade)) {
+      grade = wanted;
+      await seedGrade(page, grade, levels);
+    }
     await openGame(page, activity.id);
     await noOverflow();
     await page.screenshot({
@@ -797,6 +822,19 @@ const MATH_HELP = {
   clock: [0, ".clock-legend"],
   column: [1, ".col-carry"],
   units: [3, "#math-help"],
+  // Mental arithmetic (Kopfrechnen).
+  blitz: [0, "#math-help .calc-field"],
+  "blitz@16": [16, "#math-help"],
+  "blitz@17": [17, ".compare-help"],
+  complete: [0, "#math-help .calc-field"],
+  double: [0, "#math-help .mirror-field"],
+  family: [0, "#math-help"],
+  "family@3": [3, "#math-help .calc-field"],
+  // Grade 3: steps over the next ten, tens and ones apart, Rechen-Mix.
+  "complete@7": [7, "#math-help"],
+  "double@8": [8, "#math-help"],
+  mix: [0, "#math-help"],
+  "mix@3": [3, "#math-help"],
   // Levels of grades 3 and 4 in the older games.
   "times@12": [12, "#math-help p"],
   "times@8": [8, "#math-help .dot-field"],
@@ -807,7 +845,7 @@ const MATH_HELP = {
 for (const [key, [level, help]] of Object.entries(MATH_HELP))
   test(`math help in steps and the answer shown in its gap: ${key}`, async ({ page }) => {
     const mode = key.split("@")[0];
-    await seedGrade(page, 4, { [mode]: level });
+    await seedGrade(page, C.levelGrade(mode, level), { [mode]: level });
     await openGame(page, mode);
     await wrong(page);
     await expect(page.locator("#feedback")).toContainText(
@@ -891,7 +929,8 @@ test("grade 3 shows the new games of grade 3, grade 2 opens them early", async (
   await seedGrade(page, 2);
   await showGames(page, "column");
   await expect(page.locator('.activity-card[data-activity="column"]')).toHaveCount(0);
-  await seedGrade(page, 2, { cross: C.gradeStart("cross", 3) });
+  // A game of another category does not open it.
+  await seedGrade(page, 2, { adjacent: C.gradeStart("adjacent", 3) });
   await showGames(page, "column");
   await expect(page.locator('.activity-card[data-activity="column"]')).toHaveCount(0);
   await seedGrade(page, 2, { calc: C.gradeStart("calc", 3) });
@@ -902,4 +941,16 @@ test("grade 3 shows the new games of grade 3, grade 2 opens them early", async (
   await expect(page.locator('[data-category="grammar"]')).toBeVisible();
   await page.locator('[data-category="grammar"]').click();
   await expect(page.locator('.activity-card[data-activity="tense"]')).toBeVisible();
+  // Too easy for grade 3: Blitzrechnen and the sound games are gone; English
+  // (only grade 1–2 levels) stays for beginners.
+  await page.locator(".brand").click();
+  await page.locator('[data-subject="mathe"]').click();
+  await page.locator('[data-category="mental"]').click();
+  await expect(page.locator('.activity-card[data-activity="complete"]')).toBeVisible();
+  await expect(page.locator('.activity-card[data-activity="blitz"]')).toHaveCount(0);
+  await page.locator(".brand").click();
+  await page.locator('[data-subject="deutsch"]').click();
+  await expect(page.locator('[data-category="hearing"]')).toHaveCount(0);
+  await page.locator(".brand").click();
+  await expect(page.locator('[data-subject="englisch"]')).toBeVisible();
 });

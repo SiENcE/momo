@@ -23,18 +23,18 @@ Beim ersten Start fragt Momo einmal: „In welche Klasse gehst du?“ Angeboten 
 | Klasse | Was dazugehört |
 | --- | --- |
 | 1. Klasse | die ersten Stufen von: Laute, Anlaute, Laute verbinden, ABC, Silben, Merken; Mengen, Zahlen bis 20, über die 10 rechnen, Geld bis 20 Cent, volle und halbe Stunden, Säulen lesen; Englisch |
-| 2. Klasse | die höheren Stufen davon und zusätzlich Merkwörter, Wörter verlängern, doppelte Mitlaute und ie (Schreib-Detektiv), Nomen, Verben und Adjektive; Zahlenhaus, Hundertertafel, Weiterzählen, Vergleichen, Ordnen, Zahlen-Nachbarn, Zehner rechnen und Einmaleins |
-| 3. Klasse | Deutsch: ck und tz, ä und äu durch verwandte Wörter, Wortarten ohne Bild und im Satz, Pronomen, Zeitformen (Gegenwart und Vergangenheit, auch unregelmäßig: gehen – ging). Mathe: Große Zahlen bis 1000, mit Hundertern rechnen (352 + 300, 370 + _ = 400), schriftlich plus und minus, Geteiltaufgaben, Weiterzählen in 100er-, 50er- und 25er-Schritten, Vergleichen bis 1000, Umrechnen (m und cm, € und ct, Stunden und Minuten) |
+| 2. Klasse | die höheren Stufen davon und zusätzlich Merkwörter, Wörter verlängern, doppelte Mitlaute und ie (Schreib-Detektiv), Nomen, Verben und Adjektive; Zahlenhaus, Hundertertafel, Weiterzählen, Vergleichen, Ordnen, Zahlen-Nachbarn, Kopfrechnen bis 20 (Blitzrechnen, Ergänzen, Doppelt und halb, Tausch und Umkehr), Zehner rechnen und Einmaleins |
+| 3. Klasse | Deutsch: ck und tz, ä und äu durch verwandte Wörter, Wortarten ohne Bild und im Satz, Pronomen, Zeitformen (Gegenwart und Vergangenheit, auch unregelmäßig: gehen – ging). Mathe: Große Zahlen bis 1000, mit Hundertern rechnen (352 + 300, 370 + _ = 400), schriftlich plus und minus, Geteiltaufgaben, Ergänzen bis 100, das Doppelte und die Hälfte bis 100, Rechen-Mix (alle Rechenarten bis 100, mit Platzhaltern: 42 : _ = 6, 34 + _ = 61), Zehner und Einer bündeln und zerlegen, Nachbarzehner, Plus und Minus zweistellig, Weiterzählen in 100er-, 50er- und 25er-Schritten, Vergleichen bis 1000, Umrechnen (m und cm, € und ct, Stunden und Minuten) |
 | 4. Klasse | Deutsch: ss oder ß, das oder dass, Verben als Nomen (das Schwimmen), Artikel, Perfekt mit habe oder bin, alle vier Zeitformen. Mathe: Große Zahlen bis zur Million, mit Tausendern rechnen, schriftlich bis zur Million und mit drei Zahlen, Zehnereinmaleins, Malnehmen durch Zerlegen, Teilen mit Rest, große Schritte, Vergleichen bis zur Million, kg, km und l, Brüche (½ kg, ¾ h) und Kommazahlen (2,50 €) |
 
-Spiele ohne eigene Stufen für die 3. oder 4. Klasse starten dort auf den Stufen der 2. Klasse und werden von dort aus schwerer. „Schriftlich rechnen“, „Umrechnen“ und „Zeitformen“ beginnen erst in der 3. Klasse.
+Jedes Spiel gehört zu den Klassen von seiner ersten bis zu seiner letzten Stufen-Klasse. **Für ältere Kinder zu leichte Spiele verschwinden:** Ein Spiel ohne Stufen der 3. Klasse (z. B. Laute üben, ABC, Silben klatschen, Mengen, Blitzrechnen, Geld und Uhr) erscheint ab der 3. Klasse nicht mehr, eines ohne Stufen der 4. Klasse (z. B. Ergänzen, Rechen-Mix, Zahlen-Nachbarn) ab der 4. Klasse nicht mehr. Englisch bleibt: Dort gibt es nur Stufen der 1. und 2. Klasse, die auch für Anfänger der 3. und 4. Klasse passen. „Schriftlich rechnen“, „Umrechnen“, „Zeitformen“ und „Rechen-Mix“ beginnen erst in der 3. Klasse.
 
-Spiele, die erst in einer höheren Klasse beginnen (z. B. Zahlenhaus oder Einmaleins), erscheinen für jüngere Kinder, sobald sie in einem passenden Spiel alle Aufgaben ihrer Klasse geschafft haben – also dort auf den Stufen der höheren Klasse angekommen sind. Passend heißt: ein Spiel aus demselben Bereich (Zahlen-Blick oder Zahlen bauen öffnen das Zahlenhaus, Silben klatschen öffnet Merkwörter und Wörter verlängern). Hat der Bereich kein solches Spiel (Vergleichen, Einmaleins, Messen), reicht ein Spiel desselben Fachs. „Schriftlich rechnen“ öffnet sich zum Beispiel, wenn „Zehner rechnen“ bei den Hunderter-Aufgaben der 3. Klasse angekommen ist, „Zeitformen“ über die „Wortarten“. Das Kind sieht dann auf der Ergebnis-Seite „Neu: Spiel …!“. Einmal geöffnete Spiele bleiben offen, auch wenn es später wieder leichter wird.
+Spiele, die erst in einer höheren Klasse beginnen (z. B. Zahlenhaus oder Einmaleins), erscheinen für jüngere Kinder, sobald sie in einem passenden Spiel alle Aufgaben ihrer Klasse geschafft haben – also dort auf den Stufen der höheren Klasse angekommen sind. Passend heißt: ein Spiel aus demselben Bereich (Zahlen-Blick oder Zahlen bauen öffnen das Zahlenhaus, Silben klatschen öffnet Merkwörter und Wörter verlängern). Hat der Bereich kein solches Spiel (Vergleichen, Einmaleins, Messen), reicht ein Spiel desselben Fachs. „Schriftlich rechnen“ öffnet sich zum Beispiel, wenn „Zehner rechnen“ bei den Hunderter-Aufgaben der 3. Klasse angekommen ist, „Zeitformen“ über die „Wortarten“. Das Kind sieht dann auf der Ergebnis-Seite „Neu: Spiel …!“. Einmal geöffnete Spiele bleiben offen, auch wenn es später wieder leichter wird. Zu leichte Spiele öffnen sich so nie.
 
 Sonst muss das Kind nichts einstellen. Auf der Startseite gibt es einen großen **Spielen**-Knopf, der das am längsten nicht gespielte Spiel startet. Darunter wählt das Kind in drei Schritten selbst:
 
 1. **Fach:** Deutsch, Mathe oder Englisch
-2. **Bereich:** bei Deutsch *Laute üben*, *ABC üben*, *Richtig schreiben*, *Wörter und Sätze* und *Zu zweit*; bei Mathe *Mengen*, *Zehner und Einer*, *Große Zahlen*, *Zahlen finden*, *Vergleichen*, *Rechnen*, *Einmaleins*, *Messen*, *Geld und Uhr* und *Diagramme*; bei Englisch *Hören und zeigen*, *Farben und Zahlen* und *Zu zweit*
+2. **Bereich:** bei Deutsch *Laute üben*, *ABC üben*, *Richtig schreiben*, *Wörter und Sätze* und *Zu zweit*; bei Mathe *Mengen*, *Zehner und Einer*, *Große Zahlen*, *Zahlen finden*, *Vergleichen*, *Kopfrechnen*, *Rechnen*, *Einmaleins*, *Messen*, *Geld und Uhr* und *Diagramme*; bei Englisch *Hören und zeigen*, *Farben und Zahlen* und *Zu zweit*
 3. **Spiel** aus diesem Bereich
 
 Das ✕ im Spiel und „Anderes Spiel“ führen zurück zum Bereich, „← Zurück“ eine Stufe höher.
@@ -64,7 +64,7 @@ Das ✕ im Spiel und „Anderes Spiel“ führen zurück zum Bereich, „← Zur
 | Quatschwort-Echo 👥 | Fantasiewörter nachsprechen           | 2 bis 5 Silben, schwierige Lautverbindungen, zwei Wörter                      |
 | Mitmach-Spiel 👥   | Bewegungsfolgen nachmachen            | 2 bis 5 Bewegungen, auch rückwärts                                            |
 
-## Mathe: die dreiundzwanzig Spiele (Zahlenraum bis 100, in der 3. und 4. Klasse bis 1000 und bis zur Million)
+## Mathe: die achtundzwanzig Spiele (Zahlenraum bis 100, in der 3. und 4. Klasse bis 1000 und bis zur Million)
 
 Die Aufgaben orientieren sich an typischen Arbeitsheft-Seiten der 2. Klasse.
 
@@ -85,7 +85,7 @@ Beim Vergleichen hilft Momo nach dem zweiten Fehler mit Paaren: Die Dinge ohne P
 | Spiel        | Was wird geübt?                                   | Wie es schwerer wird |
 | ------------ | ------------------------------------------------- | -------------------- |
 | Zahlen-Blick | Zehnerstangen und Einerwürfel ansehen, Zahl wählen | bis 20 → bis 50 → bis 99, Zahlendreher als Falle (74 statt 47), Einer manchmal vor den Zehnern, volle Zehner und 100 |
-| Zahlenhaus   | Stellenwert: Wie viele Zehner/Einer hat 47? „4 Zehner und 7 Einer“ → Zahl | erst Zehner, dann Einer, gemischt, „7 Einer und 4 Zehner“ (umgekehrte Reihenfolge), Bündeln (3 Zehner und 12 Einer = 42), Zerlegen (47 = 40 + 7) |
+| Zahlenhaus   | Stellenwert: Wie viele Zehner/Einer hat 47? „4 Zehner und 7 Einer“ → Zahl | erst Zehner, dann Einer, gemischt, „7 Einer und 4 Zehner“ (umgekehrte Reihenfolge), Bündeln (3 Zehner und 12 Einer = 42), Zerlegen (47 = 40 + 7) (ab Bündeln 3. Klasse) |
 | Zahlen bauen | Eine Zahl mit + und − im Zahlenhaus legen         | bis 20 → bis 99, Zahl nur hören, 10 mehr/weniger, 1 mehr/weniger, gemischt ohne sichtbare Startzahl |
 
 **Zahlen finden**
@@ -102,14 +102,26 @@ Beim Vergleichen hilft Momo nach dem zweiten Fehler mit Paaren: Die Dinge ohne P
 | ------------------ | --------------------------------------- | -------------------- |
 | Krokodil-Vergleich | < oder > („Das Krokodil frisst die größere Zahl“) | verschiedene Zehner → nahe Zahlen → gleiche Zehner → Zahlendreher (62/26) → mit = → „30 + 5“ gegen eine Zahl (2. Klasse) → bis 1000 mit Zahlendrehern (3. Klasse) → bis zur Million, auch verschieden lange Zahlen (9876 gegen 12 345) (4. Klasse) |
 | Zahlen ordnen      | Zahlen der Größe nach antippen          | 3 bis 6 Zahlen, gleiche Zehner, Zahlendreher, von groß nach klein |
-| Zahlen-Nachbarn    | Vorgänger, Nachfolger, dazwischen, Nachbarzehner | erst bis 50, dann über den Zehner (39 → 40), Nachbarzehner davor/danach, gemischt |
+| Zahlen-Nachbarn    | Vorgänger, Nachfolger, dazwischen, Nachbarzehner | erst bis 50, dann über den Zehner (39 → 40), Nachbarzehner davor/danach, gemischt (ab Nachbarzehner 3. Klasse) |
+
+**Kopfrechnen** (2. Klasse bis 20; Ergänzen und Doppelt und halb in der 3. Klasse bis 100)
+
+| Spiel          | Was wird geübt?                      | Wie es schwerer wird |
+| -------------- | ------------------------------------ | -------------------- |
+| Blitzrechnen   | Plus und Minus bis 20, eine Stufe pro Aufgabenart | Plus mit 0, 1 und 10 → Plus mit 5 und Verdoppeln → Plus bis 10 → bis 20 ohne Zehnerübergang (14 + 3) → mit Zehnerübergang (8 + 5) → gemischt → Minus mit 1 und 0 → Minus mit 10 und 5 → Zerlegen und Halbieren (10 − 4, 14 − 7) → Minus bis 10 → bis 20 ohne und mit Zehnerübergang (17 − 4, 13 − 5) → gemischt → Plus und Minus ohne, mit Zehnerübergang, gemischt → drei Zahlen (7 + 5 − 3) → Terme vergleichen (7 + 5 ○ 6 + 6) |
+| Ergänzen       | Was fehlt bis 8, 9, 10 oder 20?      | bis 10 → bis 8 oder 9 → 8, 9 oder 10 → bis 20 (14 + _ = 20) → bis 20 über die 10 (7 + _ = 20) → 10 oder 20 gemischt (2. Klasse) → bis 100 mit vollen Zehnern (70 + _ = 100) → bis 100 (37 + _ = 100) → bis 50 oder 100 (3. Klasse) |
+| Doppelt und halb | Verdoppeln und Halbieren, Fast-Verdoppeln | Verdoppeln bis 5, bis 10 → Halbieren bis 10, bis 20 → gemischt → fast verdoppeln (6 + 7 = 6 + 6 + 1) (2. Klasse) → das Doppelte bis 100 (34 → 68) → die Hälfte bis 100 (86 → 43) → mit Übergang (37 → 74, 70 → 35) (3. Klasse) |
+| Tausch und Umkehr | Tauschaufgaben (3 + 5 = 5 + 3) und Umkehraufgaben (7 + 5 = 12 → 12 − 5 = 7) | Tauschaufgabe finden → Tauschaufgabe nutzen (2 + 9 = 9 + 2) → Umkehraufgabe finden → Umkehraufgabe nutzen (13 − 7, denn 6 + 7 = 13) → beides gemischt bis 20 |
+
+Falsche Antworten sind auch hier typische Fehler: Zehner vergessen (8 + 5 = 3), beim Minus über den Zehner die kleinere von der größeren Ziffer abgezogen (13 − 5 = 12), beim Ergänzen bis 9 der Zehnerpartner (6 + 4), beim Verdoppeln 2 dazu statt verdoppelt. Nach dem zweiten Fehler zeigt Momo ein Zwanzigerfeld (die neuen Punkte blau, weggenommene durchgestrichen) oder beim Verdoppeln Punkte mit Spiegel, beim Zehnerübergang danach die zwei Schritte über die 10.
 
 **Rechnen**
 
 | Spiel          | Was wird geübt?                      | Wie es schwerer wird |
 | -------------- | ------------------------------------ | -------------------- |
 | Zehner rechnen | Mit Zehnerzahlen rechnen, später mit Hundertern und Tausendern | 50 + 30, 70 − 20, 52 + 30, 76 − 20, bis zum Nachbarzehner (32 + _ = 40), zurück (33 − _ = 30), gemischt (2. Klasse) → 300 + 400, 352 + 300, bis zum Nachbarhunderter (370 + _ = 400) (3. Klasse) → 3000 + 4000, bis zum Nachbartausender, 300 000 + 400 000 (4. Klasse) |
-| Über den Zehner | Plus und Minus mit Zehnerübergang, über den vollen Zehner | 7 + 5, 13 − 5, 38 + 5, 52 − 7, in Schritten (38 + 2 + 3), zweistellig ohne und mit Übergang (34 + 25, 38 + 25, 62 − 27), gemischt |
+| Über den Zehner | Plus und Minus mit Zehnerübergang, über den vollen Zehner | 7 + 5, 13 − 5, 38 + 5, 52 − 7, in Schritten (38 + 2 + 3), zweistellig ohne und mit Übergang (34 + 25, 38 + 25, 62 − 27), gemischt (zweistellig 3. Klasse) |
+| Rechen-Mix | Alle vier Rechenarten bis 100, auch mit Platzhaltern (3. Klasse) | Geteilt mit Platzhalter (42 : _ = 6) → Mal und Geteilt gemischt → mit Platzhaltern (_ · 7 = 42) → Plus und Minus mit Platzhaltern (34 + _ = 61) → alle Rechenarten → alle mit Platzhaltern |
 | Schriftlich rechnen | Schriftliche Addition und Subtraktion untereinander, mit Stellentafel-Spalten und Überträgen | plus mit einem, dann mehreren Überträgen, minus (bis 1000, 3. Klasse) → bis 100 000, drei Zahlen plus, plus und minus bis zur Million (4. Klasse) |
 
 Beim schriftlichen Rechnen zeigt Momo für das Ergebnis ein Kästchen pro Spalte, so verrät die Länge nichts. Falsche Antworten sind die typischen Fehler: Übertrag vergessen, beim Minus die kleinere von der größeren Ziffer abgezogen, Übertrag beim Minus vergessen. Nach dem zweiten Fehler erscheinen die Überträge klein über dem Strich, nach dem dritten rechnet Momo die Einer-Spalte vor.
@@ -210,7 +222,7 @@ Momo ist ein kleines Haustier, um das sich das Kind kümmert:
 - **Überblick:** die Klasse (den Einstieg) wählen, den Lernstand öffnen und das Wichtigste zum Spiel. Klassen ohne Spiele wären ausgegraut (zurzeit haben alle vier Klassen Spiele). Beim Wechsel rücken Spiele, die noch unter dem Einstieg der neuen Klasse stehen, auf diesen Einstieg vor; höhere Stufen bleiben erhalten.
 - **Stufen:** die Stufe jedes Spiels von Hand setzen, falls die automatische Stufe nicht passt. Hinter jeder Stufe steht ihre Klasse („Kl. 2“). Die Spiele sind nach Fach (aufklappbar) und Bereich gruppiert.
 - **Vorlesen:** Sprachausgabe ganz ein- und ausschalten, deutsche und englische Stimme, Tempo, automatisches Vorlesen, Kleinbuchstaben und die Laute zum Probehören.
-- **Daten:** Datenschutz und „Fortschritt zurücksetzen“.
+- **Daten:** Datenschutz, „Fortschritt zurücksetzen“ und ein kurzes Impressum (privates, nicht kommerzielles Projekt, keine Datenhaltung).
 
 Nach etwa fünf Minuten Spielzeit schlägt Momo eine Pause vor.
 

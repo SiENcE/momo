@@ -1076,9 +1076,24 @@ test("grades: every game names the first level of each of its grades", () => {
   assert.equal(C.levelGrade("placetable", C.maxLevel("placetable")), 4);
   // Grade 2 offers every game up to grade 2, grade 1 the ones that start in grade 1;
   // a few games only start in grade 3 and show from there on.
-  const third = ["column", "units", "tense"];
+  const third = ["column", "units", "tense", "mix"];
   assert.ok(C.ACTIVITIES.every((x) => C.inGrade(x.id, 2) !== third.includes(x.id)));
-  assert.ok(C.ACTIVITIES.every((x) => C.inGrade(x.id, 3) && C.inGrade(x.id, 4)));
+  // Above its highest grade a game is too easy and hidden; English has no
+  // levels beyond grade 2 and stays for beginners in grades 3 and 4.
+  const last = (id) => Math.max(...Object.keys(C.ACTIVITIES.find((x) => x.id === id).grades).map(Number));
+  for (const grade of [3, 4])
+    for (const x of C.ACTIVITIES)
+      assert.equal(C.inGrade(x.id, grade), last(x.id) >= grade || C.ENGLISH_GAMES.includes(x.id), `${x.id}/${grade}`);
+  for (const id of ["blitz", "family", "count", "type", "merk", "syllables"]) assert.equal(C.inGrade(id, 3), false, id);
+  for (const id of ["complete", "double", "adjacent", "place", "cross", "mix"]) {
+    assert.ok(C.inGrade(id, 3) && !C.inGrade(id, 4), id);
+    assert.equal(C.levelGrade(id, C.maxLevel(id)), 3, id);
+  }
+  // Easy games never open early for an older child, whatever was played.
+  const older = C.defaultState();
+  C.setGrade(older, 3);
+  older.levels.bundle = C.maxLevel("bundle");
+  assert.ok(!C.isOpen("blitz", 3, older) && !C.openGames(older).includes("blitz"));
   // Grades 3 and 4 have their own levels in every subject's main games.
   for (const id of ["times", "calc", "steps", "compare", "spell", "wordtype"])
     assert.equal(C.levelGrade(id, C.maxLevel(id)), 4, id);
@@ -1315,4 +1330,136 @@ test("laying big numbers: bundling, unbundling and tasks that need it", () => {
       }
     }
   assert.ok(bundled > 20, "many change tasks need bundling");
+});
+
+test("mental arithmetic up to 20: workbook kinds, slips and spoken words", () => {
+  const random = seeded(23);
+  const each = (mode, check) => {
+    for (let level = 0; level <= C.maxLevel(mode); level++)
+      for (let i = 0; i < 80; i++) check(C.makeQuestion(mode, level, null, random), C.LEVELS[mode][level]);
+  };
+  // An equation from "parts" with the answer in the gap holds.
+  const holds = (parts, answer) => {
+    const filled = parts.map((x) => (x === null ? Number(answer) : x));
+    const sides = [];
+    let current = [];
+    for (const x of filled) {
+      if (x === "=") {
+        sides.push(current);
+        current = [];
+      } else current.push(x);
+    }
+    sides.push(current);
+    const value = (terms) => terms.reduce((sum, x, i) => (i % 2 ? sum : terms[i - 1] === "−" ? sum - x : sum + x), 0);
+    return sides.every((side) => value(side) === value(sides[0]));
+  };
+  each("blitz", (q, config) => {
+    assert.ok(!/\d/.test(q.speech) && !/[+−=]/.test(q.speech), q.speech);
+    assert.ok(!/\d/.test(q.explain.speech), q.explain.speech);
+    assert.ok(config.ops.includes(q.kind));
+    if (q.kind === "terms") {
+      const symbol = q.left.value < q.right.value ? "<" : q.left.value > q.right.value ? ">" : "=";
+      assert.equal(q.answer, symbol);
+      assert.ok(Math.abs(q.left.value - q.right.value) <= 2);
+      return;
+    }
+    assert.ok(holds(q.parts, q.answer), q.parts.join(" "));
+    assert.ok(q.result >= 1 && q.result <= 20);
+    const ones = q.a % 10;
+    if (q.kind === "plusCross") assert.ok(q.a < 10 && q.b < 10 && q.result > 10);
+    if (q.kind === "plusTeen") assert.ok(q.result > 10 && (q.a % 10) + (q.b % 10) < 10);
+    if (q.kind === "minusCross") assert.ok(q.a > 10 && ones < q.b && q.result < 10);
+    if (q.kind === "minusTeen") assert.ok(q.a > 10 && (q.b > 10 || ones >= q.b));
+    if (q.kind === "plus01") assert.ok([0, 1, 10].includes(q.special) && [q.a, q.b].includes(q.special));
+    if (q.kind === "minusHalf" && q.sub === "half") assert.equal(q.a, 2 * q.b);
+    // Typical slips are on the cards: the ten forgotten, 13 − 5 = 12.
+    if (q.kind === "plusCross") assert.ok(q.choices.includes(String(q.result - 10)));
+    if (q.kind === "minusCross") assert.ok(q.choices.includes(String(10 + q.b - ones)));
+  });
+  each("complete", (q, config) => {
+    assert.ok(config.targets.includes(q.target));
+    assert.equal(q.a + Number(q.answer), q.target);
+    assert.ok(q.a >= 1 && Number(q.answer) >= 1);
+    if (config.from === "teen") assert.ok(q.a > 10);
+    if (config.from === "small") assert.ok(q.a < 10);
+    // To 9: the partner to 10 is the typical slip.
+    if (q.target === 9) assert.ok(q.choices.includes(String(10 - q.a)));
+    assert.ok(!/\d/.test(q.speech + q.explain.speech));
+  });
+  each("double", (q, config) => {
+    assert.ok(config.asks.includes(q.ask));
+    const answer = Number(q.answer);
+    if (q.ask === "double") assert.equal(answer, 2 * q.n);
+    if (q.ask === "half") assert.equal(2 * answer, q.n);
+    if (q.ask === "near") assert.ok(holds(q.parts, q.answer) && Math.abs(q.a - q.b) === 1);
+    assert.ok(Math.max(q.n, answer) <= config.max);
+    // The number itself is never a card.
+    if (q.ask !== "near") assert.ok(!q.choices.includes(String(q.n)));
+    assert.ok(!/\d/.test(q.speech + q.explain.speech));
+  });
+  each("family", (q, config) => {
+    assert.ok(config.asks.includes(q.ask));
+    assert.equal(q.a + q.b, q.s);
+    assert.ok(q.s <= config.max);
+    if (q.ask === "findSwap") {
+      assert.equal(q.answer, `${q.b} + ${q.a}`);
+      assert.ok(!q.choices.includes(`${q.a} + ${q.b}`));
+    }
+    if (q.ask === "findInverse") {
+      assert.equal(q.answer, q.fromPlus ? `${q.s} − ${q.b}` : `${q.a} + ${q.b}`);
+      // The other task of the family would also undo it in a way: never offered.
+      assert.ok(!q.choices.includes(q.fromPlus ? `${q.s} − ${q.a}` : `${q.b} + ${q.a}`));
+    }
+    if (q.known) for (const choice of q.choices) assert.ok(q.say[choice] && !/\d|[+−]/.test(q.say[choice]));
+    else assert.ok(holds(q.parts, q.answer) && (!q.check || holds(q.check, q.answer)));
+    assert.ok(!/\d/.test(q.speech + q.explain.speech));
+  });
+});
+
+test("grade 3: completing to 100, das Doppelte und die Hälfte, Rechen-Mix with gaps", () => {
+  const random = seeded(31);
+  const each = (mode, from, check) => {
+    for (let level = from; level <= C.maxLevel(mode); level++)
+      for (let i = 0; i < 80; i++) check(C.makeQuestion(mode, level, null, random), C.LEVELS[mode][level]);
+  };
+  const spoken = (q) =>
+    [q.speech, q.explain.speech, q.tip?.speech, q.help?.speech, q.help2?.speech].filter(Boolean).join(" ");
+  const steps = (q) => {
+    assert.ok(q.tip && q.help, q.mode);
+    // Signs go to the voice as words (a colon ending a phrase is fine).
+    assert.ok(!/\d|[+−·=]| : |\bEins Zehner/.test(spoken(q)), spoken(q));
+  };
+  each("complete", C.gradeStart("complete", 3), (q, config) => {
+    assert.equal(q.a + q.b, q.target);
+    assert.ok(q.target >= 50 && q.a >= 10 && q.b >= 2);
+    if (config.from === "tens") assert.equal(q.a % 10, 0);
+    // The digits each completed to 10 (37 + 73) is the typical slip.
+    else assert.ok(q.choices.includes(String(q.b + 10)));
+    steps(q);
+  });
+  each("double", C.gradeStart("double", 3), (q, config) => {
+    const answer = Number(q.answer);
+    const tens = Math.floor(q.n / 10);
+    if (q.ask === "double") {
+      assert.equal(answer, 2 * q.n);
+      assert.equal(q.n % 10 >= 5, config.carry);
+    } else {
+      assert.equal(2 * answer, q.n);
+      // With carry the tens are odd: 70 → 35, 74 → 37.
+      assert.equal(tens % 2 === 1, config.carry);
+    }
+    assert.ok(q.n >= 11 && answer <= 100);
+    steps(q);
+  });
+  const value = (x, op, y) => ({ "+": x + y, "−": x - y, "·": x * y, ":": x / y })[op];
+  each("mix", 0, (q, config) => {
+    assert.ok(config.ops.includes(q.op));
+    const [x, op, y, , z] = q.parts.map((part) => (part === null ? Number(q.answer) : part));
+    assert.equal(value(x, op, y), z, q.parts.join(" "));
+    assert.ok([x, y, z].every((n) => Number.isInteger(n) && n >= 1 && n <= 100));
+    assert.equal(q.gapAt === 4, !q.op.endsWith("Gap"));
+    if (["times", "divide", "timesGap", "divGap"].includes(q.op)) assert.ok(op === "·" || op === ":");
+    else assert.ok(op === "+" || op === "−");
+    steps(q);
+  });
 });
