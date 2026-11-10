@@ -359,6 +359,7 @@ test("adults can override levels, show lowercase and reset everything", async ({
   // A short Impressum: private, non-commercial, data only in this browser.
   await expect(page.locator("#imprint")).toContainText("F. Fischer");
   await expect(page.locator("#imprint")).toContainText("lokal im Browser");
+  await expect(page.locator("#imprint a")).toHaveAttribute("href", "https://github.com/SiENcE/momo/issues/new");
   await page.locator("#reset-progress").click();
   await page.locator("#cancel-reset").click();
   await expect(page.locator("#total-stars")).toHaveText("1");
